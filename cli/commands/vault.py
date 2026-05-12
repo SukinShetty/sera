@@ -33,12 +33,12 @@ def vault_init(client):
         console.print(f"[yellow]Vault for '{client}' already exists:[/yellow] {client_path}")
         return
 
-    for subdir in ["briefs", "hypotheses", "experiments", "reports"]:
+    for subdir in ["briefs", "hypotheses", "experiments", "results"]:
         ensure_dir(client_path / subdir)
 
     console.print(f"[green]OK[/green] Created vault for client '[bold]{client}[/bold]'")
     console.print(f"  Location: {client_path}")
-    console.print("  Folders:  briefs/  hypotheses/  experiments/  reports/")
+    console.print("  Folders:  briefs/  hypotheses/  experiments/  results/")
 
 
 @vault.command("list")
@@ -57,7 +57,7 @@ def vault_list():
     table.add_column("Briefs", justify="right")
     table.add_column("Hypotheses", justify="right")
     table.add_column("Experiments", justify="right")
-    table.add_column("Reports", justify="right")
+    table.add_column("Results", justify="right")
 
     for client in clients:
         def count(sub):
@@ -69,7 +69,7 @@ def vault_list():
             count("briefs"),
             count("hypotheses"),
             count("experiments"),
-            count("reports"),
+            count("results"),
         )
 
     console.print(table)
@@ -92,7 +92,7 @@ def vault_status(client):
     table.add_column("Items", justify="right")
     table.add_column("Path", style="dim")
 
-    for subdir in ["briefs", "hypotheses", "experiments", "reports"]:
+    for subdir in ["briefs", "hypotheses", "experiments", "results"]:
         subpath = client_path / subdir
         if subpath.exists():
             items = len(list(subpath.iterdir()))

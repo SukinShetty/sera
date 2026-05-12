@@ -51,9 +51,22 @@
     "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
     "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
   },
+  "sera-integration-complete": {
+    "key": "sera-integration-complete",
+    "value": "Integration complete 2026-05-12. 79/79 tests pass. E2E smoke test: create vault, write brief, generate 3 hyps, create exp, log 2 results (A=0.09 B=0.17), select winner (B), generate 3545-byte report. 1 bug fixed: cli vault init used 'reports/' instead of 'results/'.",
+    "created": "2026-05-12T00:00:03Z",
+    "updated": "2026-05-12T00:00:03Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["integration", "status", "complete"],
+    "type": "fact",
+    "confidence": { "score": 0.99, "source": "agent-verified", "reason": "All tests green, E2E verified" },
+    "vitality": { "score": 80, "trend": "stable", "state": "thriving", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": ["sera-worktrees"] }
+  },
   "sera-next-steps": {
     "key": "sera-next-steps",
-    "value": "Integration complete. All sessions merged. Full test suite green. SERA Vault OS v0.1.0 shipped.",
+    "value": "SERA Vault OS v0.1.0 shipped. Next: install deps (pip install -r requirements.txt), run 'python -m cli.main --help', set ANTHROPIC_API_KEY for AI features.",
     "created": "2026-05-12T00:00:00Z",
     "updated": "2026-05-12T00:00:02Z",
     "agent_id": "main",
