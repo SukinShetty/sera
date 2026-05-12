@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sera://schemas/brief",
+  "title": "Research Brief",
+  "description": "Defines the scope and objectives of a client research engagement.",
+  "type": "object",
+  "required": ["client_id", "title", "objective", "status"],
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "Unique identifier for the client (slug format, e.g. 'acme-corp')."
+    },
+    "title": {
+      "type": "string",
+      "description": "Short descriptive title of the research brief."
+    },
+    "objective": {
+      "type": "string",
+      "description": "Primary research objective — what question should this engagement answer?"
+    },
+    "background": {
+      "type": "string",
+      "description": "Context and background information for this research engagement."
+    },
+    "target_audience": {
+      "type": "string",
+      "description": "The audience or user segment being studied."
+    },
+    "research_questions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered list of specific research questions to be investigated."
+    },
+    "timeline": {
+      "type": "string",
+      "description": "Expected duration or deadline for the engagement (e.g. '4 weeks', '2026-06-30')."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "complete", "archived"],
+      "description": "Lifecycle status of this brief."
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date the brief was created (YYYY-MM-DD)."
+    }
+  },
+  "additionalProperties": false
+}

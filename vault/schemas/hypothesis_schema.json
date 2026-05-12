@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sera://schemas/hypothesis",
+  "title": "Research Hypothesis",
+  "description": "A testable hypothesis generated from a research brief.",
+  "type": "object",
+  "required": ["id", "brief_id", "client_id", "title", "hypothesis", "status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this hypothesis (e.g. 'hyp-001')."
+    },
+    "brief_id": {
+      "type": "string",
+      "description": "ID of the parent research brief this hypothesis belongs to."
+    },
+    "client_id": {
+      "type": "string",
+      "description": "Client this hypothesis is associated with."
+    },
+    "title": {
+      "type": "string",
+      "description": "Short label for this hypothesis."
+    },
+    "hypothesis": {
+      "type": "string",
+      "description": "The testable hypothesis statement (If X, then Y, because Z)."
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Why this hypothesis is worth testing — supporting reasoning or prior evidence."
+    },
+    "metrics": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Measurable success metrics that will confirm or reject this hypothesis."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "confirmed", "rejected", "archived"],
+      "description": "Lifecycle status of this hypothesis."
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date the hypothesis was created (YYYY-MM-DD)."
+    }
+  },
+  "additionalProperties": false
+}

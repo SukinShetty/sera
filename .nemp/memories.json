@@ -8,33 +8,9 @@
     "projectPath": "C:/Users/User/sera-vault-os",
     "tags": ["project", "definition"],
     "type": "fact",
-    "confidence": {
-      "score": 0.90,
-      "source": "user-confirmed",
-      "reason": "Manually saved by user"
-    },
-    "vitality": {
-      "score": 50,
-      "trend": "stable",
-      "state": "active",
-      "reads": 0,
-      "last_read": null,
-      "reads_7d": 0,
-      "reads_30d": 0,
-      "foresight_loads": 0,
-      "foresight_skips": 0,
-      "agent_references": 0,
-      "update_count": 0,
-      "correction_events": 0,
-      "decay_rate": 0.01
-    },
-    "links": {
-      "goals": [],
-      "conflicts": [],
-      "supersedes": null,
-      "superseded_by": null,
-      "causal": []
-    }
+    "confidence": { "score": 0.90, "source": "user-confirmed", "reason": "Manually saved by user" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
   },
   "sera-architecture": {
     "key": "sera-architecture",
@@ -45,33 +21,9 @@
     "projectPath": "C:/Users/User/sera-vault-os",
     "tags": ["architecture", "sessions"],
     "type": "fact",
-    "confidence": {
-      "score": 0.90,
-      "source": "user-confirmed",
-      "reason": "Manually saved by user"
-    },
-    "vitality": {
-      "score": 50,
-      "trend": "stable",
-      "state": "active",
-      "reads": 0,
-      "last_read": null,
-      "reads_7d": 0,
-      "reads_30d": 0,
-      "foresight_loads": 0,
-      "foresight_skips": 0,
-      "agent_references": 0,
-      "update_count": 0,
-      "correction_events": 0,
-      "decay_rate": 0.01
-    },
-    "links": {
-      "goals": [],
-      "conflicts": [],
-      "supersedes": null,
-      "superseded_by": null,
-      "causal": []
-    }
+    "confidence": { "score": 0.90, "source": "user-confirmed", "reason": "Manually saved by user" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
   },
   "sera-session-rules": {
     "key": "sera-session-rules",
@@ -82,33 +34,9 @@
     "projectPath": "C:/Users/User/sera-vault-os",
     "tags": ["rules", "workflow"],
     "type": "rule",
-    "confidence": {
-      "score": 0.90,
-      "source": "user-confirmed",
-      "reason": "Manually saved by user"
-    },
-    "vitality": {
-      "score": 50,
-      "trend": "stable",
-      "state": "active",
-      "reads": 0,
-      "last_read": null,
-      "reads_7d": 0,
-      "reads_30d": 0,
-      "foresight_loads": 0,
-      "foresight_skips": 0,
-      "agent_references": 0,
-      "update_count": 0,
-      "correction_events": 0,
-      "decay_rate": 0.01
-    },
-    "links": {
-      "goals": [],
-      "conflicts": [],
-      "supersedes": null,
-      "superseded_by": null,
-      "causal": []
-    }
+    "confidence": { "score": 0.90, "source": "user-confirmed", "reason": "Manually saved by user" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
   },
   "sera-session-0-complete": {
     "key": "sera-session-0-complete",
@@ -119,107 +47,35 @@
     "projectPath": "C:/Users/User/sera-vault-os",
     "tags": ["session-0", "status", "complete"],
     "type": "fact",
-    "confidence": {
-      "score": 0.90,
-      "source": "user-confirmed",
-      "reason": "Manually saved by user"
-    },
-    "vitality": {
-      "score": 50,
-      "trend": "stable",
-      "state": "active",
-      "reads": 0,
-      "last_read": null,
-      "reads_7d": 0,
-      "reads_30d": 0,
-      "foresight_loads": 0,
-      "foresight_skips": 0,
-      "agent_references": 0,
-      "update_count": 0,
-      "correction_events": 0,
-      "decay_rate": 0.01
-    },
-    "links": {
-      "goals": [],
-      "conflicts": [],
-      "supersedes": null,
-      "superseded_by": null,
-      "causal": []
-    }
+    "confidence": { "score": 0.90, "source": "user-confirmed", "reason": "Manually saved by user" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
   },
   "sera-next-steps": {
     "key": "sera-next-steps",
-    "value": "Next: start Session 1 (cli/) and Session 2 (vault/) in parallel. Open sera-session-1 and sera-session-2 folders in Claude Code. Sessions 3 and 4 follow after.",
+    "value": "Integration complete. All sessions merged. Full test suite green. SERA Vault OS v0.1.0 shipped.",
     "created": "2026-05-12T00:00:00Z",
-    "updated": "2026-05-12T00:00:01Z",
+    "updated": "2026-05-12T00:00:02Z",
     "agent_id": "main",
     "projectPath": "C:/Users/User/sera-vault-os",
-    "tags": ["next-steps", "worktrees"],
+    "tags": ["next-steps", "integration"],
     "type": "goal",
-    "confidence": {
-      "score": 0.90,
-      "source": "user-confirmed",
-      "reason": "Manually saved by user"
-    },
-    "vitality": {
-      "score": 50,
-      "trend": "stable",
-      "state": "active",
-      "reads": 0,
-      "last_read": null,
-      "reads_7d": 0,
-      "reads_30d": 0,
-      "foresight_loads": 0,
-      "foresight_skips": 0,
-      "agent_references": 0,
-      "update_count": 0,
-      "correction_events": 0,
-      "decay_rate": 0
-    },
-    "links": {
-      "goals": [],
-      "conflicts": [],
-      "supersedes": null,
-      "superseded_by": null,
-      "causal": []
-    }
+    "confidence": { "score": 0.90, "source": "user-confirmed", "reason": "Integration verified" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 1, "correction_events": 0, "decay_rate": 0 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
   },
   "sera-worktrees": {
     "key": "sera-worktrees",
-    "value": "4 worktrees created (2026-05-12). All branch from master@b7b619b. sera-session-1=session/cli, sera-session-2=session/vault, sera-session-3=session/engine, sera-session-4=session/reports. All contain Session 0 foundation files.",
+    "value": "4 worktrees merged into master (2026-05-12). sera-session-1=session/cli, sera-session-2=session/vault, sera-session-3=session/engine, sera-session-4=session/reports.",
     "created": "2026-05-12T00:00:01Z",
-    "updated": "2026-05-12T00:00:01Z",
+    "updated": "2026-05-12T00:00:02Z",
     "agent_id": "main",
     "projectPath": "C:/Users/User/sera-vault-os",
     "tags": ["worktrees", "git", "branches"],
     "type": "fact",
-    "confidence": {
-      "score": 0.90,
-      "source": "user-confirmed",
-      "reason": "Manually verified after creation"
-    },
-    "vitality": {
-      "score": 50,
-      "trend": "stable",
-      "state": "active",
-      "reads": 0,
-      "last_read": null,
-      "reads_7d": 0,
-      "reads_30d": 0,
-      "foresight_loads": 0,
-      "foresight_skips": 0,
-      "agent_references": 0,
-      "update_count": 0,
-      "correction_events": 0,
-      "decay_rate": 0.01
-    },
-    "links": {
-      "goals": [],
-      "conflicts": [],
-      "supersedes": null,
-      "superseded_by": null,
-      "causal": ["sera-architecture"]
-    }
+    "confidence": { "score": 0.90, "source": "user-confirmed", "reason": "Manually verified after creation" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 1, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": ["sera-architecture"] }
   },
   "sera-folder-ownership": {
     "key": "sera-folder-ownership",
@@ -230,33 +86,35 @@
     "projectPath": "C:/Users/User/sera-vault-os",
     "tags": ["rules", "ownership", "folders"],
     "type": "rule",
-    "confidence": {
-      "score": 0.90,
-      "source": "user-confirmed",
-      "reason": "Manually saved by user"
-    },
-    "vitality": {
-      "score": 50,
-      "trend": "stable",
-      "state": "active",
-      "reads": 0,
-      "last_read": null,
-      "reads_7d": 0,
-      "reads_30d": 0,
-      "foresight_loads": 0,
-      "foresight_skips": 0,
-      "agent_references": 0,
-      "update_count": 0,
-      "correction_events": 0,
-      "decay_rate": 0.01
-    },
-    "links": {
-      "goals": [],
-      "conflicts": [],
-      "supersedes": null,
-      "superseded_by": null,
-      "causal": ["sera-session-rules"]
-    }
+    "confidence": { "score": 0.90, "source": "user-confirmed", "reason": "Manually saved by user" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": ["sera-session-rules"] }
+  },
+  "sera-session-2-complete": {
+    "key": "sera-session-2-complete",
+    "value": "Session 2 complete (2026-05-12). vault/__init__.py, scaffold.py, 4 JSON schemas, 5 templates. create_client_vault() and list_vaults() smoke-tested.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "session-2",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["session-2", "status", "complete"],
+    "type": "fact",
+    "confidence": { "score": 0.95, "source": "agent-verified", "reason": "All files created and smoke-tested successfully" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
+  },
+  "sera-vault-api": {
+    "key": "sera-vault-api",
+    "value": "vault/scaffold.py: create_client_vault(client_id)->Path creates vault/clients/{id}/ with briefs/, hypotheses/, experiments/, results/, _meta.md. list_vaults()->list[str].",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "session-2",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["api", "vault", "session-2"],
+    "type": "fact",
+    "confidence": { "score": 0.95, "source": "agent-verified", "reason": "Code written and smoke-tested" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
   },
   "sera-shared-api": {
     "key": "sera-shared-api",
@@ -267,32 +125,8 @@
     "projectPath": "C:/Users/User/sera-vault-os",
     "tags": ["api", "shared", "session-0"],
     "type": "fact",
-    "confidence": {
-      "score": 0.90,
-      "source": "user-confirmed",
-      "reason": "Manually saved by user"
-    },
-    "vitality": {
-      "score": 50,
-      "trend": "stable",
-      "state": "active",
-      "reads": 0,
-      "last_read": null,
-      "reads_7d": 0,
-      "reads_30d": 0,
-      "foresight_loads": 0,
-      "foresight_skips": 0,
-      "agent_references": 0,
-      "update_count": 0,
-      "correction_events": 0,
-      "decay_rate": 0.01
-    },
-    "links": {
-      "goals": [],
-      "conflicts": [],
-      "supersedes": null,
-      "superseded_by": null,
-      "causal": []
-    }
+    "confidence": { "score": 0.90, "source": "user-confirmed", "reason": "Manually saved by user" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
   }
 }

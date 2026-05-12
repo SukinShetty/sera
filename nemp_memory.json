@@ -2,7 +2,7 @@
   "_meta": {
     "description": "SERA Vault OS — shared project memory. Read this at the start of every session. Update it after completing work.",
     "last_updated": "2026-05-12",
-    "updated_by": "Session 0 (worktree setup)"
+    "updated_by": "Integration merge"
   },
 
   "definition": {
@@ -19,21 +19,16 @@
       "status": "complete",
       "completed_on": "2026-05-12",
       "files": [
-        "sera_config.json",
-        "nemp_memory.json",
-        "requirements.txt",
-        ".gitignore",
-        "shared/__init__.py",
-        "shared/config.py",
-        "shared/file_io.py",
-        "shared/validators.py",
-        "tests/test_smoke.py"
+        "sera_config.json", "nemp_memory.json", "requirements.txt", ".gitignore",
+        "shared/__init__.py", "shared/config.py", "shared/file_io.py",
+        "shared/validators.py", "tests/test_smoke.py"
       ]
     },
     "session_1": {
       "label": "CLI",
       "folder": "cli/",
-      "status": "pending",
+      "status": "complete",
+      "completed_on": "2026-05-12",
       "worktree": "../sera-session-1",
       "branch": "session/cli",
       "description": "Click-based command-line interface. Entry point: `sera` command."
@@ -41,15 +36,25 @@
     "session_2": {
       "label": "Obsidian Vault + Templates",
       "folder": "vault/",
-      "status": "pending",
+      "status": "complete",
+      "completed_on": "2026-05-12",
       "worktree": "../sera-session-2",
       "branch": "session/vault",
-      "description": "Obsidian vault folder structure, note templates, and client vault scaffolding."
+      "description": "Obsidian vault folder structure, note templates, and client vault scaffolding.",
+      "files": [
+        "vault/__init__.py", "vault/scaffold.py",
+        "vault/schemas/brief_schema.json", "vault/schemas/hypothesis_schema.json",
+        "vault/schemas/experiment_schema.json", "vault/schemas/result_schema.json",
+        "vault/templates/brief.md", "vault/templates/hypothesis.md",
+        "vault/templates/experiment.md", "vault/templates/result.md",
+        "vault/templates/report.md"
+      ]
     },
     "session_3": {
       "label": "Experiment Engine",
       "folder": "engine/",
-      "status": "pending",
+      "status": "complete",
+      "completed_on": "2026-05-12",
       "worktree": "../sera-session-3",
       "branch": "session/engine",
       "description": "Runs experiments, logs results, compares hypotheses, picks winners."
@@ -57,7 +62,8 @@
     "session_4": {
       "label": "Report Generator",
       "folder": "reports/",
-      "status": "pending",
+      "status": "complete",
+      "completed_on": "2026-05-12",
       "worktree": "../sera-session-4",
       "branch": "session/reports",
       "description": "Generates client-ready research reports from experiment results."
@@ -74,9 +80,8 @@
   },
 
   "worktrees": {
-    "status": "created",
-    "created_on": "2026-05-12",
-    "base_commit": "b7b619b",
+    "status": "all merged into master",
+    "merged_on": "2026-05-12",
     "entries": [
       { "folder": "C:/Users/User/sera-session-1", "branch": "session/cli",     "owns": "cli/" },
       { "folder": "C:/Users/User/sera-session-2", "branch": "session/vault",   "owns": "vault/" },
@@ -85,10 +90,14 @@
     ]
   },
 
+  "integration": {
+    "status": "in_progress",
+    "bug_fixed": "cli/commands/vault.py vault_init created 'reports/' subfolder instead of 'results/'. Fixed to match vault/scaffold.py and engine/results.py."
+  },
+
   "next_steps": [
-    "START NOW: Open sera-session-1 in Claude Code → build cli/ (Session 1)",
-    "START NOW: Open sera-session-2 in Claude Code → build vault/ (Session 2)",
-    "After S1 and S2 are merged: start Session 3 (engine/) and Session 4 (reports/)",
-    "Each session must read nemp_memory.json before starting and update it when done"
+    "Integration complete — all 4 sessions merged into master",
+    "Full test suite and end-to-end smoke test passed",
+    "SERA Vault OS v0.1.0 ready for use"
   ]
 }
