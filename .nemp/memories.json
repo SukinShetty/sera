@@ -220,5 +220,153 @@
       "superseded_by": null,
       "causal": []
     }
+  },
+  "session_4_reports": {
+    "key": "session_4_reports",
+    "value": "complete",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-session-4",
+    "tags": ["session-4", "status", "complete"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
+  "session-4-files-created": {
+    "key": "session-4-files-created",
+    "value": "reports/__init__.py, reports/compiler.py, reports/formatter.py, reports/exporter.py, reports/generator.py, tests/test_smoke_reports.py. Branch: session/reports. 24/24 smoke tests pass.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-session-4",
+    "tags": ["session-4", "files", "reports"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
+  "session-4-public-function": {
+    "key": "session-4-public-function",
+    "value": "reports.generator.generate(client: str, brief_id: str) -> Path. Reads vault files, formats via Jinja2 (8 sections), writes to reports/output/{client}/report-{brief_id}-{NNN}.md. AI summary if ANTHROPIC_API_KEY set; else fallback.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-session-4",
+    "tags": ["session-4", "api", "reports"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
+  "session-4-integration-notes": {
+    "key": "session-4-integration-notes",
+    "value": "Final merge: copy reports/ into main. No engine/ import (reads vault MD files directly). Requires jinja2>=3.1. CLI wires: from reports.generator import generate. Config key reports_root must exist in sera_config.json paths. Vault structure: vault/clients/{client}/briefs|hypotheses|experiments|results/.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-session-4",
+    "tags": ["session-4", "integration", "merge"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
   }
 }
