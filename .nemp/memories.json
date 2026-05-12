@@ -184,6 +184,80 @@
       "causal": []
     }
   },
+  "sera-session-2-complete": {
+    "key": "sera-session-2-complete",
+    "value": "Session 2 complete (2026-05-12). Files: vault/__init__.py, vault/scaffold.py, vault/schemas/{brief,hypothesis,experiment,result}_schema.json, vault/templates/{brief,hypothesis,experiment,result,report}.md. create_client_vault() and list_vaults() smoke-tested and passing.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "session-2",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["session-2", "status", "complete"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.95,
+      "source": "agent-verified",
+      "reason": "All files created and smoke-tested successfully"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
+  "sera-vault-api": {
+    "key": "sera-vault-api",
+    "value": "vault/scaffold.py: create_client_vault(client_id:str)->Path creates vault/clients/{id}/ with briefs/, hypotheses/, experiments/, results/, _meta.md. list_vaults()->list[str] returns sorted client IDs. Imports from shared.config and shared.file_io.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "session-2",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["api", "vault", "session-2"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.95,
+      "source": "agent-verified",
+      "reason": "Code written and smoke-tested"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
   "sera-shared-api": {
     "key": "sera-shared-api",
     "value": "shared/config.py: CONFIG + get_path(key) + PROJECT_ROOT. shared/file_io.py: ensure_dir(path), read_markdown(path)->(fm,body), write_markdown(path,body,fm). shared/validators.py: validate_schema(data,schema,ctx)->errors, assert_valid(data,schema,ctx). Python 3.14.3.",

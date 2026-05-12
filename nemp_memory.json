@@ -2,7 +2,7 @@
   "_meta": {
     "description": "SERA Vault OS — shared project memory. Read this at the start of every session. Update it after completing work.",
     "last_updated": "2026-05-12",
-    "updated_by": "Session 0"
+    "updated_by": "Session 2"
   },
 
   "definition": {
@@ -39,8 +39,22 @@
     "session_2": {
       "label": "Obsidian Vault + Templates",
       "folder": "vault/",
-      "status": "pending",
-      "description": "Obsidian vault folder structure, note templates, and client vault scaffolding."
+      "status": "complete",
+      "completed_on": "2026-05-12",
+      "description": "Obsidian vault folder structure, note templates, and client vault scaffolding.",
+      "files": [
+        "vault/__init__.py",
+        "vault/scaffold.py",
+        "vault/schemas/brief_schema.json",
+        "vault/schemas/hypothesis_schema.json",
+        "vault/schemas/experiment_schema.json",
+        "vault/schemas/result_schema.json",
+        "vault/templates/brief.md",
+        "vault/templates/hypothesis.md",
+        "vault/templates/experiment.md",
+        "vault/templates/result.md",
+        "vault/templates/report.md"
+      ]
     },
     "session_3": {
       "label": "Experiment Engine",
@@ -66,9 +80,8 @@
   },
 
   "next_steps": [
-    "Create git worktrees for Session 1 through Session 4 (one branch per session)",
     "Session 1 (cli/): Build Click CLI — 'sera create-client', 'sera run-experiment', 'sera generate-report'",
-    "Session 2 (vault/): Build Obsidian vault structure and note templates",
+    "Session 2 (vault/): COMPLETE — vault/__init__.py, scaffold.py, 4 JSON schemas, 5 Jinja2 templates",
     "Session 3 (engine/): Build experiment runner and result logger",
     "Session 4 (reports/): Build Jinja2-based report generator"
   ],

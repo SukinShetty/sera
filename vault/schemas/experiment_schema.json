@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sera://schemas/experiment",
+  "title": "Experiment",
+  "description": "A structured experiment designed to test a research hypothesis.",
+  "type": "object",
+  "required": ["id", "hypothesis_id", "client_id", "title", "methodology", "status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this experiment (e.g. 'exp-001')."
+    },
+    "hypothesis_id": {
+      "type": "string",
+      "description": "ID of the hypothesis this experiment tests."
+    },
+    "client_id": {
+      "type": "string",
+      "description": "Client this experiment is associated with."
+    },
+    "title": {
+      "type": "string",
+      "description": "Short descriptive title of the experiment."
+    },
+    "methodology": {
+      "type": "string",
+      "description": "How the experiment is conducted (e.g. 'A/B test', 'user interview', 'survey')."
+    },
+    "independent_variable": {
+      "type": "string",
+      "description": "The variable being deliberately changed."
+    },
+    "dependent_variable": {
+      "type": "string",
+      "description": "The outcome being measured."
+    },
+    "control_variable": {
+      "type": "string",
+      "description": "Variables held constant to ensure a fair test."
+    },
+    "expected_outcome": {
+      "type": "string",
+      "description": "Predicted result if the hypothesis is correct."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "running", "complete", "failed"],
+      "description": "Lifecycle status of this experiment."
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date the experiment was created (YYYY-MM-DD)."
+    }
+  },
+  "additionalProperties": false
+}
