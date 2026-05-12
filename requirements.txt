@@ -1,0 +1,23 @@
+# SERA Vault OS — Python dependencies
+# Install everything with: pip install -r requirements.txt
+
+# --- Foundation (Session 0) ---
+# No external dependencies needed for the shared foundation layer.
+# All shared/ modules use Python's built-in libraries only.
+
+# --- CLI (Session 1) ---
+click>=8.1          # Powers the command-line interface (the "sera" command)
+rich>=13.0          # Pretty terminal output: tables, colors, progress bars
+
+# --- Vault / Obsidian (Session 2) ---
+python-frontmatter>=1.1   # Reads/writes Obsidian note metadata headers
+
+# --- Experiment Engine (Session 3) ---
+# No external dependencies planned yet
+
+# --- Report Generator (Session 4) ---
+jinja2>=3.1         # Template engine for generating research reports
+
+# --- Development & Testing ---
+pytest>=8.0         # Test runner — run tests with: python -m pytest tests/ -v
+pytest-cov>=5.0     # Test coverage reporting

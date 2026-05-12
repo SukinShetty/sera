@@ -1,0 +1,81 @@
+{
+  "_meta": {
+    "description": "SERA Vault OS — shared project memory. Read this at the start of every session. Update it after completing work.",
+    "last_updated": "2026-05-12",
+    "updated_by": "Session 0"
+  },
+
+  "definition": {
+    "name": "SERA Vault OS",
+    "acronym": "Self-Evolving Research Architecture",
+    "purpose": "A local-first Research-as-a-Service operating system integrated with Obsidian. Helps create client research vaults, generate research questions and hypotheses, run experiments, log results, select winning experiments, and generate client-ready research reports.",
+    "paradigm": "local-first, research-as-a-service, Obsidian-integrated"
+  },
+
+  "architecture": {
+    "session_0": {
+      "label": "Shared Foundation",
+      "folder": "shared/",
+      "status": "complete",
+      "completed_on": "2026-05-12",
+      "files": [
+        "sera_config.json",
+        "nemp_memory.json",
+        "requirements.txt",
+        ".gitignore",
+        "shared/__init__.py",
+        "shared/config.py",
+        "shared/file_io.py",
+        "shared/validators.py",
+        "tests/test_smoke.py"
+      ]
+    },
+    "session_1": {
+      "label": "CLI",
+      "folder": "cli/",
+      "status": "pending",
+      "description": "Click-based command-line interface. Entry point: `sera` command."
+    },
+    "session_2": {
+      "label": "Obsidian Vault + Templates",
+      "folder": "vault/",
+      "status": "pending",
+      "description": "Obsidian vault folder structure, note templates, and client vault scaffolding."
+    },
+    "session_3": {
+      "label": "Experiment Engine",
+      "folder": "engine/",
+      "status": "pending",
+      "description": "Runs experiments, logs results, compares hypotheses, picks winners."
+    },
+    "session_4": {
+      "label": "Report Generator",
+      "folder": "reports/",
+      "status": "pending",
+      "description": "Generates client-ready research reports from experiment results."
+    }
+  },
+
+  "rules": {
+    "session_ownership": "Each session owns only its assigned folder. Never modify another session's folder.",
+    "read_nemp_first": "Every session must read nemp_memory.json before starting any work.",
+    "update_nemp_after": "Every session must update nemp_memory.json after completing work.",
+    "shared_imports": "Sessions may import from shared/ but not from each other's folders.",
+    "git_worktrees": "Parallel sessions use git worktrees. Each worktree = one session = one branch.",
+    "no_overwrite": "Never overwrite existing work. Read first, then decide."
+  },
+
+  "next_steps": [
+    "Create git worktrees for Session 1 through Session 4 (one branch per session)",
+    "Session 1 (cli/): Build Click CLI — 'sera create-client', 'sera run-experiment', 'sera generate-report'",
+    "Session 2 (vault/): Build Obsidian vault structure and note templates",
+    "Session 3 (engine/): Build experiment runner and result logger",
+    "Session 4 (reports/): Build Jinja2-based report generator"
+  ],
+
+  "worktree_setup": {
+    "command_template": "git worktree add ../sera-session-{N} -b session/{label}",
+    "example": "git worktree add ../sera-session-1 -b session/cli",
+    "note": "Run from the main sera-vault-os directory. Creates a sibling folder per session."
+  }
+}

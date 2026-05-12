@@ -1,0 +1,43 @@
+{
+  "_comment": "SERA Vault OS — main configuration file. Edit this to customize your setup.",
+
+  "project": {
+    "name": "SERA Vault OS",
+    "full_name": "Self-Evolving Research Architecture Vault Operating System",
+    "version": "0.1.0",
+    "description": "A local-first Research-as-a-Service OS integrated with Obsidian"
+  },
+
+  "paths": {
+    "_comment": "Where SERA stores its working files. Relative to the project root.",
+    "vault_root":       "vault/",
+    "clients_root":     "vault/clients/",
+    "templates_root":   "vault/templates/",
+    "experiments_root": "engine/experiments/",
+    "logs_root":        "engine/logs/",
+    "reports_root":     "reports/output/"
+  },
+
+  "obsidian": {
+    "_comment": "Settings for Obsidian vault integration.",
+    "template_folder":  "vault/templates/",
+    "client_folder":    "vault/clients/",
+    "daily_notes":      false
+  },
+
+  "llm": {
+    "_comment": "Language model settings for generating research questions, hypotheses, and reports.",
+    "provider":     "openai",
+    "model":        "gpt-4o",
+    "temperature":  0.7,
+    "max_tokens":   4096
+  },
+
+  "research": {
+    "_comment": "Default settings for the research workflow.",
+    "hypotheses_per_experiment":  3,
+    "max_experiments_per_client": 10,
+    "winning_threshold":          0.7,
+    "report_format":              "markdown"
+  }
+}
