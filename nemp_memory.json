@@ -1,17 +1,15 @@
 {
   "_meta": {
-    "description": "SERA Vault OS — shared project memory. Read this at the start of every session. Update it after completing work.",
+    "description": "SERA Vault OS - shared project memory. Read this at the start of every session. Update it after completing work.",
     "last_updated": "2026-05-12",
-    "updated_by": "Session 0"
+    "updated_by": "Session 3"
   },
-
   "definition": {
     "name": "SERA Vault OS",
     "acronym": "Self-Evolving Research Architecture",
     "purpose": "A local-first Research-as-a-Service operating system integrated with Obsidian. Helps create client research vaults, generate research questions and hypotheses, run experiments, log results, select winning experiments, and generate client-ready research reports.",
     "paradigm": "local-first, research-as-a-service, Obsidian-integrated"
   },
-
   "architecture": {
     "session_0": {
       "label": "Shared Foundation",
@@ -33,46 +31,108 @@
     "session_1": {
       "label": "CLI",
       "folder": "cli/",
-      "status": "pending",
-      "description": "Click-based command-line interface. Entry point: `sera` command."
+      "status": "complete",
+      "completed_on": "2026-05-12",
+      "branch": "session/cli",
+      "entry_point": "python -m cli.main",
+      "files": [
+        "cli/__init__.py",
+        "cli/main.py",
+        "cli/commands/__init__.py",
+        "cli/commands/vault.py",
+        "cli/commands/hypothesis.py",
+        "cli/commands/experiment.py",
+        "cli/commands/report.py"
+      ],
+      "integration_notes": [
+        "Engine stubs expect: from engine.hypothesis import generate(client, brief_id)",
+        "Engine stubs expect: from engine.experiment import create(client, hypothesis_id)",
+        "Reports stub expects: from reports.generator import generate(client, brief_id)",
+        "All output uses rich tables and ASCII-safe text (no em dashes, no Unicode symbols)"
+      ]
     },
     "session_2": {
       "label": "Obsidian Vault + Templates",
       "folder": "vault/",
-      "status": "pending",
-      "description": "Obsidian vault folder structure, note templates, and client vault scaffolding."
+      "status": "complete",
+      "completed_on": "2026-05-12",
+      "files": [
+        "vault/__init__.py",
+        "vault/scaffold.py",
+        "vault/schemas/brief_schema.json",
+        "vault/schemas/hypothesis_schema.json",
+        "vault/schemas/experiment_schema.json",
+        "vault/schemas/result_schema.json",
+        "vault/templates/brief.md",
+        "vault/templates/hypothesis.md",
+        "vault/templates/experiment.md",
+        "vault/templates/result.md",
+        "vault/templates/report.md"
+      ]
     },
     "session_3": {
       "label": "Experiment Engine",
       "folder": "engine/",
-      "status": "pending",
-      "description": "Runs experiments, logs results, compares hypotheses, picks winners."
+      "status": "complete",
+      "completed_on": "2026-05-12",
+      "branch": "session/engine",
+      "files": [
+        "engine/__init__.py",
+        "engine/hypothesis.py",
+        "engine/experiment.py",
+        "engine/results.py",
+        "engine/winner.py",
+        "tests/test_engine_smoke.py"
+      ],
+      "public_functions": {
+        "engine.hypothesis.generate": "generate(client, brief_id) -> list[str]",
+        "engine.experiment.create": "create(client, hypothesis_id) -> str",
+        "engine.results.log_result": "log_result(client, experiment_id, condition, metric, value, notes) -> str",
+        "engine.results.list_results": "list_results(client, experiment_id) -> list[dict]",
+        "engine.winner.select_winner": "select_winner(client, experiment_id) -> dict"
+      },
+      "integration_notes": [
+        "generate() reads briefs from vault/clients/{client}/briefs/{brief_id}.md",
+        "generate() writes 3 hypotheses to vault/clients/{client}/hypotheses/hyp-NNN.md",
+        "create() reads from hypotheses/, writes to experiments/exp-NNN.md with status=pending",
+        "log_result() writes to vault/clients/{client}/results/res-{exp_id}-{condition}.md",
+        "select_winner() marks winner=true in result frontmatter and status=complete on experiment",
+        "Anthropic API (claude-sonnet-4-6) used if ANTHROPIC_API_KEY env var is set; fallback always works",
+        "All result files store condition, metric, value in frontmatter for winner comparison",
+        "list_results() returns list of dicts with all frontmatter fields + path key",
+        "winner dict keys: winner_id, winner_condition, winner_metric, winner_value, experiment_id, total_results",
+        "34/34 smoke tests pass (tests/test_engine_smoke.py)"
+      ]
     },
     "session_4": {
       "label": "Report Generator",
       "folder": "reports/",
       "status": "pending",
-      "description": "Generates client-ready research reports from experiment results."
+      "description": "Generates client-ready research reports from experiment results.",
+      "cli_contract": "Expose reports.generator.generate(client, brief_id)",
+      "engine_contract": [
+        "Use engine.results.list_results(client, experiment_id) to read all results",
+        "Use engine.winner.select_winner result dict for winner summary in reports",
+        "Hypothesis files at: vault/clients/{client}/hypotheses/hyp-NNN.md",
+        "Experiment files at: vault/clients/{client}/experiments/exp-NNN.md",
+        "Result files at: vault/clients/{client}/results/res-{exp_id}-{condition}.md",
+        "All result frontmatter: id, experiment_id, client_id, condition, metric, value, winner, confidence, status, recorded_on"
+      ]
     }
   },
-
   "rules": {
-    "session_ownership": "Each session owns only its assigned folder. Never modify another session's folder.",
+    "session_ownership": "Each session owns only its assigned folder. Never modify another session folder.",
     "read_nemp_first": "Every session must read nemp_memory.json before starting any work.",
     "update_nemp_after": "Every session must update nemp_memory.json after completing work.",
-    "shared_imports": "Sessions may import from shared/ but not from each other's folders.",
+    "shared_imports": "Sessions may import from shared/ but not from each other folders.",
     "git_worktrees": "Parallel sessions use git worktrees. Each worktree = one session = one branch.",
     "no_overwrite": "Never overwrite existing work. Read first, then decide."
   },
-
   "next_steps": [
-    "Create git worktrees for Session 1 through Session 4 (one branch per session)",
-    "Session 1 (cli/): Build Click CLI — 'sera create-client', 'sera run-experiment', 'sera generate-report'",
-    "Session 2 (vault/): Build Obsidian vault structure and note templates",
-    "Session 3 (engine/): Build experiment runner and result logger",
-    "Session 4 (reports/): Build Jinja2-based report generator"
+    "Session 4 (reports/): Build Jinja2-based report generator - expose reports.generator.generate(client, brief_id)",
+    "Session 4 reads engine results via engine.results.list_results() and engine.winner summary dicts",
+    "Merge all session branches into main when all 4 sessions are complete"
   ],
-
   "worktree_setup": {
     "command_template": "git worktree add ../sera-session-{N} -b session/{label}",
     "example": "git worktree add ../sera-session-1 -b session/cli",
