@@ -1,0 +1,224 @@
+{
+  "sera-project-definition": {
+    "key": "sera-project-definition",
+    "value": "SERA Vault OS = local-first Research-as-a-Service OS + Obsidian. Creates client vaults, generates hypotheses, runs experiments, logs results, selects winners, generates reports. Root: C:/Users/User/sera-vault-os",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["project", "definition"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
+  "sera-architecture": {
+    "key": "sera-architecture",
+    "value": "5 sessions: S0=shared foundation (done), S1=cli/, S2=vault/, S3=engine/, S4=reports/. Each session owns its folder only. Uses git worktrees for parallel sessions.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["architecture", "sessions"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
+  "sera-session-rules": {
+    "key": "sera-session-rules",
+    "value": "Rules: each session owns only its folder; read nemp_memory.json first; update nemp_memory.json after; import only from shared/; git worktree per session; never overwrite existing work.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["rules", "workflow"],
+    "type": "rule",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
+  "sera-session-0-complete": {
+    "key": "sera-session-0-complete",
+    "value": "Session 0 complete (2026-05-12). Files: sera_config.json, nemp_memory.json, requirements.txt, .gitignore, shared/__init__.py, shared/config.py, shared/file_io.py, shared/validators.py, tests/test_smoke.py. 21/21 smoke tests pass. Committed to master.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["session-0", "status", "complete"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
+  "sera-next-steps": {
+    "key": "sera-next-steps",
+    "value": "Next: create git worktrees for S1-S4. S1=cli/ (Click CLI), S2=vault/ (Obsidian templates), S3=engine/ (experiment runner), S4=reports/ (Jinja2 report gen). Command: git worktree add ../sera-session-{N} -b session/{label}",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["next-steps", "worktrees"],
+    "type": "goal",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  },
+  "sera-shared-api": {
+    "key": "sera-shared-api",
+    "value": "shared/config.py: CONFIG + get_path(key) + PROJECT_ROOT. shared/file_io.py: ensure_dir(path), read_markdown(path)->(fm,body), write_markdown(path,body,fm). shared/validators.py: validate_schema(data,schema,ctx)->errors, assert_valid(data,schema,ctx). Python 3.14.3.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["api", "shared", "session-0"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": []
+    }
+  }
+}
