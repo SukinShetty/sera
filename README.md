@@ -1,6 +1,6 @@
 # SERA Vault OS
 
-**Self-Evolving Research Architecture — v0.1.0**
+**Self-Evolving Research Architecture — v0.2.0**
 
 A local-first, Research-as-a-Service operating system integrated with Obsidian.
 SERA turns a research brief into a structured vault of hypotheses, experiments,
@@ -117,8 +117,50 @@ set ANTHROPIC_API_KEY=sk-ant-...    # Windows
 ### Run Tests
 ```bash
 python -m pytest tests/ -v
-# 79 passed
+# 83 passed
 ```
+
+---
+
+## Streamlit Frontend (v0.2)
+
+SERA v0.2 ships a local web UI so you can manage research without the terminal.
+
+### Launch the Frontend
+
+```bash
+streamlit run frontend/app.py
+```
+
+Opens at `http://localhost:8501` in your browser.
+
+### v0.2 Usage Flow
+
+The UI mirrors the CLI workflow across six tabs:
+
+| Tab | What you do |
+|-----|-------------|
+| **Brief** | Create a new research brief or view existing ones |
+| **Hypotheses** | Generate 3 hypotheses from a brief (AI or fallback) |
+| **Experiments** | Create an experiment from a hypothesis |
+| **Results** | Log measured values per condition (A, B, control, …) |
+| **Winner** | Select the winning condition with one click |
+| **Report** | Generate and preview the full Markdown report |
+
+Use the **sidebar** to create a new client vault or switch between existing clients.
+
+### CLI Still Works
+
+The v0.1 CLI is unchanged. All existing commands work exactly as before:
+
+```bash
+python -m cli.main vault init --client acme-corp
+python -m cli.main hypothesis generate --client acme-corp --brief brief-001
+python -m cli.main experiment create --client acme-corp --hypothesis hyp-001
+python -m cli.main report generate --client acme-corp --brief brief-001
+```
+
+The CLI and the frontend share the same Obsidian vault — work done in one is immediately visible in the other.
 
 ---
 
@@ -326,13 +368,13 @@ decision-making.
 
 ---
 
-## Current Limitations (v0.1.0)
+## Current Limitations (v0.2.0)
 
 | Area | Limitation |
 |------|-----------|
-| **Result logging** | No CLI command for `log_result` — use the Python API directly |
-| **Winner selection** | No CLI command for `select_winner` — use the Python API directly |
-| **Briefs** | No `brief create` CLI command — write the Markdown file manually |
+| **Result logging** | No CLI command for `log_result` — use the Streamlit UI or Python API directly |
+| **Winner selection** | No CLI command for `select_winner` — use the Streamlit UI or Python API directly |
+| **Briefs** | No `brief create` CLI command — use the Streamlit UI or write the Markdown file manually |
 | **AI generation** | Requires `ANTHROPIC_API_KEY`; falls back to templated output without it |
 | **Report format** | Markdown only — no PDF or HTML export yet |
 | **Multi-user** | Local-only; no collaboration or cloud sync |
@@ -343,10 +385,10 @@ decision-making.
 
 ## Roadmap
 
-### v0.2.0 — Full CLI coverage
-- `sera brief create --client <name> --title "..."` — create briefs from the CLI
-- `sera results log --client <name> --experiment <id> --condition A --metric ctr --value 0.12`
-- `sera results winner --client <name> --experiment <id>`
+### ✅ v0.2.0 — Streamlit frontend (shipped)
+- Local web UI at `http://localhost:8501`
+- Full workflow: brief → hypotheses → experiments → results → winner → report
+- CLI unchanged and fully compatible
 
 ### v0.3.0 — Report formats
 - PDF export via `weasyprint` or `pandoc`
@@ -378,7 +420,8 @@ sera-vault-os/
   vault/          Obsidian scaffold + templates  (Session 2)
   engine/         Hypothesis, experiment, winner (Session 3)
   reports/        Compiler, formatter, exporter  (Session 4)
-  tests/          79 automated tests
+  frontend/       Streamlit web UI               (Session 5 / v0.2)
+  tests/          83 automated tests
   sera_config.json
   nemp_memory.json
   requirements.txt

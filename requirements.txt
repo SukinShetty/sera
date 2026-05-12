@@ -18,6 +18,9 @@ python-frontmatter>=1.1   # Reads/writes Obsidian note metadata headers
 # --- Report Generator (Session 4) ---
 jinja2>=3.1         # Template engine for generating research reports
 
+# --- Frontend (Session 5) ---
+streamlit>=1.35     # Local web UI: streamlit run frontend/app.py
+
 # --- Development & Testing ---
 pytest>=8.0         # Test runner — run tests with: python -m pytest tests/ -v
 pytest-cov>=5.0     # Test coverage reporting
