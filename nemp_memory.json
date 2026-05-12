@@ -2,7 +2,7 @@
   "_meta": {
     "description": "SERA Vault OS — shared project memory. Read this at the start of every session. Update it after completing work.",
     "last_updated": "2026-05-12",
-    "updated_by": "Session 0"
+    "updated_by": "Session 1"
   },
 
   "definition": {
@@ -33,8 +33,36 @@
     "session_1": {
       "label": "CLI",
       "folder": "cli/",
-      "status": "pending",
-      "description": "Click-based command-line interface. Entry point: `sera` command."
+      "status": "complete",
+      "completed_on": "2026-05-12",
+      "branch": "session/cli",
+      "entry_point": "python -m cli.main",
+      "files": [
+        "cli/__init__.py",
+        "cli/main.py",
+        "cli/commands/__init__.py",
+        "cli/commands/vault.py",
+        "cli/commands/hypothesis.py",
+        "cli/commands/experiment.py",
+        "cli/commands/report.py"
+      ],
+      "commands": {
+        "vault": ["init --client <name>", "list", "status --client <name>"],
+        "hypothesis": ["generate --client <name> --brief <brief_id> (stub)", "list --client <name>"],
+        "experiment": ["create --client <name> --hypothesis <hyp_id> (stub)", "list --client <name>"],
+        "report": ["generate --client <name> --brief <brief_id> (stub)", "list --client <name>"]
+      },
+      "integration_notes": [
+        "vault init/list/status are fully live — delegates to shared/file_io.ensure_dir and shared/config.CONFIG",
+        "hypothesis generate and experiment create stub gracefully when engine/ module is not importable",
+        "report generate stubs gracefully when reports/ module is not importable",
+        "list commands (hypothesis, experiment, report) scan vault/clients/<name>/<section>/*.md",
+        "report list also checks reports/output/<name>/*.md from CONFIG paths",
+        "All output uses rich tables and ASCII-safe text (no em dashes, no Unicode symbols) for Windows CP1252 compatibility",
+        "Engine stubs expect: from engine.hypothesis import generate(client, brief_id)",
+        "Engine stubs expect: from engine.experiment import create(client, hypothesis_id)",
+        "Reports stub expects: from reports.generator import generate(client, brief_id)"
+      ]
     },
     "session_2": {
       "label": "Obsidian Vault + Templates",
@@ -46,13 +74,15 @@
       "label": "Experiment Engine",
       "folder": "engine/",
       "status": "pending",
-      "description": "Runs experiments, logs results, compares hypotheses, picks winners."
+      "description": "Runs experiments, logs results, compares hypotheses, picks winners.",
+      "cli_contract": "Expose engine.hypothesis.generate(client, brief_id) and engine.experiment.create(client, hypothesis_id)"
     },
     "session_4": {
       "label": "Report Generator",
       "folder": "reports/",
       "status": "pending",
-      "description": "Generates client-ready research reports from experiment results."
+      "description": "Generates client-ready research reports from experiment results.",
+      "cli_contract": "Expose reports.generator.generate(client, brief_id)"
     }
   },
 
@@ -66,11 +96,9 @@
   },
 
   "next_steps": [
-    "Create git worktrees for Session 1 through Session 4 (one branch per session)",
-    "Session 1 (cli/): Build Click CLI — 'sera create-client', 'sera run-experiment', 'sera generate-report'",
     "Session 2 (vault/): Build Obsidian vault structure and note templates",
-    "Session 3 (engine/): Build experiment runner and result logger",
-    "Session 4 (reports/): Build Jinja2-based report generator"
+    "Session 3 (engine/): Build experiment runner and result logger — must expose engine.hypothesis.generate() and engine.experiment.create()",
+    "Session 4 (reports/): Build Jinja2-based report generator — must expose reports.generator.generate()"
   ],
 
   "worktree_setup": {

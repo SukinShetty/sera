@@ -184,6 +184,80 @@
       "causal": []
     }
   },
+  "sera-session-1-complete": {
+    "key": "sera-session-1-complete",
+    "value": "Session 1 complete (2026-05-12). CLI module built with Click. Commands: vault init/list/status (live), hypothesis generate/list, experiment create/list, report generate/list. Stubs graceful when engine/reports missing. Committed to session/cli branch. Entry: python -m cli.main.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "session-1",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["session-1", "cli", "status", "complete"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.95,
+      "source": "agent-verified",
+      "reason": "CLI verified via python -m cli.main --help and all command paths tested"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": ["sera-session-0-complete"]
+    }
+  },
+  "sera-cli-contracts": {
+    "key": "sera-cli-contracts",
+    "value": "CLI stubs expect these interfaces when sessions 3+4 are built: engine.hypothesis.generate(client, brief_id); engine.experiment.create(client, hypothesis_id); reports.generator.generate(client, brief_id). CLI detects missing modules via ImportError and degrades gracefully.",
+    "created": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:00Z",
+    "agent_id": "session-1",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["cli", "contracts", "integration"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.95,
+      "source": "agent-verified",
+      "reason": "Defined in cli/commands/hypothesis.py, experiment.py, report.py"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": ["sera-session-1-complete"]
+    }
+  },
   "sera-shared-api": {
     "key": "sera-shared-api",
     "value": "shared/config.py: CONFIG + get_path(key) + PROJECT_ROOT. shared/file_io.py: ensure_dir(path), read_markdown(path)->(fm,body), write_markdown(path,body,fm). shared/validators.py: validate_schema(data,schema,ctx)->errors, assert_valid(data,schema,ctx). Python 3.14.3.",
