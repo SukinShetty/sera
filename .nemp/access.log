@@ -4,3 +4,6 @@
 [2026-05-12T11:19:37Z] WRITE key=sera-session-0-complete agent=main chars=245
 [2026-05-12T11:19:37Z] WRITE key=sera-next-steps agent=main chars=198
 [2026-05-12T11:19:37Z] WRITE key=sera-shared-api agent=main chars=228
+[2026-05-12T11:23:27Z] WRITE key=sera-worktrees agent=main chars=210
+[2026-05-12T11:23:27Z] WRITE key=sera-folder-ownership agent=main chars=198
+[2026-05-12T11:23:27Z] UPDATE key=sera-next-steps agent=main chars=155

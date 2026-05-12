@@ -149,9 +149,9 @@
   },
   "sera-next-steps": {
     "key": "sera-next-steps",
-    "value": "Next: create git worktrees for S1-S4. S1=cli/ (Click CLI), S2=vault/ (Obsidian templates), S3=engine/ (experiment runner), S4=reports/ (Jinja2 report gen). Command: git worktree add ../sera-session-{N} -b session/{label}",
+    "value": "Next: start Session 1 (cli/) and Session 2 (vault/) in parallel. Open sera-session-1 and sera-session-2 folders in Claude Code. Sessions 3 and 4 follow after.",
     "created": "2026-05-12T00:00:00Z",
-    "updated": "2026-05-12T00:00:00Z",
+    "updated": "2026-05-12T00:00:01Z",
     "agent_id": "main",
     "projectPath": "C:/Users/User/sera-vault-os",
     "tags": ["next-steps", "worktrees"],
@@ -182,6 +182,80 @@
       "supersedes": null,
       "superseded_by": null,
       "causal": []
+    }
+  },
+  "sera-worktrees": {
+    "key": "sera-worktrees",
+    "value": "4 worktrees created (2026-05-12). All branch from master@b7b619b. sera-session-1=session/cli, sera-session-2=session/vault, sera-session-3=session/engine, sera-session-4=session/reports. All contain Session 0 foundation files.",
+    "created": "2026-05-12T00:00:01Z",
+    "updated": "2026-05-12T00:00:01Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["worktrees", "git", "branches"],
+    "type": "fact",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually verified after creation"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": ["sera-architecture"]
+    }
+  },
+  "sera-folder-ownership": {
+    "key": "sera-folder-ownership",
+    "value": "Folder ownership: sera-session-1 owns cli/ only; sera-session-2 owns vault/ only; sera-session-3 owns engine/ only; sera-session-4 owns reports/ only. All sessions may read shared/ but must not modify it.",
+    "created": "2026-05-12T00:00:01Z",
+    "updated": "2026-05-12T00:00:01Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["rules", "ownership", "folders"],
+    "type": "rule",
+    "confidence": {
+      "score": 0.90,
+      "source": "user-confirmed",
+      "reason": "Manually saved by user"
+    },
+    "vitality": {
+      "score": 50,
+      "trend": "stable",
+      "state": "active",
+      "reads": 0,
+      "last_read": null,
+      "reads_7d": 0,
+      "reads_30d": 0,
+      "foresight_loads": 0,
+      "foresight_skips": 0,
+      "agent_references": 0,
+      "update_count": 0,
+      "correction_events": 0,
+      "decay_rate": 0.01
+    },
+    "links": {
+      "goals": [],
+      "conflicts": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "causal": ["sera-session-rules"]
     }
   },
   "sera-shared-api": {

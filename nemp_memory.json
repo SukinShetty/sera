@@ -2,7 +2,7 @@
   "_meta": {
     "description": "SERA Vault OS — shared project memory. Read this at the start of every session. Update it after completing work.",
     "last_updated": "2026-05-12",
-    "updated_by": "Session 0"
+    "updated_by": "Session 0 (worktree setup)"
   },
 
   "definition": {
@@ -34,24 +34,32 @@
       "label": "CLI",
       "folder": "cli/",
       "status": "pending",
+      "worktree": "../sera-session-1",
+      "branch": "session/cli",
       "description": "Click-based command-line interface. Entry point: `sera` command."
     },
     "session_2": {
       "label": "Obsidian Vault + Templates",
       "folder": "vault/",
       "status": "pending",
+      "worktree": "../sera-session-2",
+      "branch": "session/vault",
       "description": "Obsidian vault folder structure, note templates, and client vault scaffolding."
     },
     "session_3": {
       "label": "Experiment Engine",
       "folder": "engine/",
       "status": "pending",
+      "worktree": "../sera-session-3",
+      "branch": "session/engine",
       "description": "Runs experiments, logs results, compares hypotheses, picks winners."
     },
     "session_4": {
       "label": "Report Generator",
       "folder": "reports/",
       "status": "pending",
+      "worktree": "../sera-session-4",
+      "branch": "session/reports",
       "description": "Generates client-ready research reports from experiment results."
     }
   },
@@ -65,17 +73,22 @@
     "no_overwrite": "Never overwrite existing work. Read first, then decide."
   },
 
-  "next_steps": [
-    "Create git worktrees for Session 1 through Session 4 (one branch per session)",
-    "Session 1 (cli/): Build Click CLI — 'sera create-client', 'sera run-experiment', 'sera generate-report'",
-    "Session 2 (vault/): Build Obsidian vault structure and note templates",
-    "Session 3 (engine/): Build experiment runner and result logger",
-    "Session 4 (reports/): Build Jinja2-based report generator"
-  ],
+  "worktrees": {
+    "status": "created",
+    "created_on": "2026-05-12",
+    "base_commit": "b7b619b",
+    "entries": [
+      { "folder": "C:/Users/User/sera-session-1", "branch": "session/cli",     "owns": "cli/" },
+      { "folder": "C:/Users/User/sera-session-2", "branch": "session/vault",   "owns": "vault/" },
+      { "folder": "C:/Users/User/sera-session-3", "branch": "session/engine",  "owns": "engine/" },
+      { "folder": "C:/Users/User/sera-session-4", "branch": "session/reports", "owns": "reports/" }
+    ]
+  },
 
-  "worktree_setup": {
-    "command_template": "git worktree add ../sera-session-{N} -b session/{label}",
-    "example": "git worktree add ../sera-session-1 -b session/cli",
-    "note": "Run from the main sera-vault-os directory. Creates a sibling folder per session."
-  }
+  "next_steps": [
+    "START NOW: Open sera-session-1 in Claude Code → build cli/ (Session 1)",
+    "START NOW: Open sera-session-2 in Claude Code → build vault/ (Session 2)",
+    "After S1 and S2 are merged: start Session 3 (engine/) and Session 4 (reports/)",
+    "Each session must read nemp_memory.json before starting and update it when done"
+  ]
 }
