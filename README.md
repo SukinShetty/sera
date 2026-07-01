@@ -1,249 +1,146 @@
 # SERA Vault OS
 
-**Self-Evolving Research Architecture — v0.2.0**
+**Self-Evolving Research Architecture** — a local-first, Obsidian-integrated operating system for running structured research.
 
-A local-first, Research-as-a-Service operating system integrated with Obsidian.
-SERA turns a research brief into a structured vault of hypotheses, experiments,
-logged results, a selected winner, and a client-ready report — all from the CLI.
+![version](https://img.shields.io/badge/version-0.2.0-blue)
+![python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)
+![license](https://img.shields.io/badge/license-MIT-green)
+![interface](https://img.shields.io/badge/interface-CLI%20%2B%20Streamlit-orange)
 
----
-
-## What It Is
-
-SERA Vault OS is a command-line research engine that runs the full scientific
-research cycle on your local machine:
+SERA turns a research brief into a structured vault of hypotheses, experiments, logged results, a selected winner, and a client-ready report — from the command line or a local web UI. Every artifact is a plain Markdown file in an Obsidian-compatible vault. You own all the data; nothing leaves your machine unless you choose to share it.
 
 ```
 Brief → Hypotheses → Experiments → Results → Winner → Report
 ```
 
-Every artifact is a Markdown file stored in an Obsidian-compatible vault.
-You own all the data. Nothing leaves your machine unless you choose to share it.
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Web UI](#web-ui-streamlit)
+- [CLI Reference](#cli-reference)
+- [Vault Structure](#vault-structure)
+- [Use Cases](#use-cases)
+- [Limitations](#limitations)
+- [Roadmap](#roadmap)
+- [Project Layout](#project-layout)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## Why It Exists
+## Overview
 
-Most research tools are either:
-- Too heavy (enterprise platforms with vendor lock-in), or
-- Too light (just a notes app with no workflow)
-
-SERA fills the gap for founders, consultants, and product teams who run
-research regularly and need a structured, repeatable process — without a SaaS
-subscription or a data scientist on retainer.
+Most research tooling is either too heavy (enterprise platforms with vendor lock-in) or too light (a notes app with no workflow). SERA fills the gap for founders, consultants, and product teams who run research regularly and need a structured, repeatable process — without a SaaS subscription or a data scientist on retainer.
 
 The research workflow is the same every time:
-1. Write a brief
-2. Generate testable hypotheses
-3. Design and run experiments
-4. Log what you measured
-5. Pick the winner
-6. Ship a client-ready report
 
-SERA automates the scaffolding and report generation so you focus on the
-research itself, not the paperwork.
+1. Write a brief.
+2. Generate testable hypotheses.
+3. Design and run experiments.
+4. Log what you measured.
+5. Pick the winner.
+6. Ship a client-ready report.
+
+SERA automates the scaffolding and report generation so you focus on the research, not the paperwork. Optional Claude integration writes hypotheses and report prose; without an API key, SERA falls back to built-in templated generators so the system always works — even offline.
 
 ---
 
-## How It Was Built
+## Features
 
-SERA was built using a parallel multi-agent architecture inside **Claude Code**:
-
-### Tool Stack
-| Tool | Role |
-|------|------|
-| **Claude Code** | AI coding agent running each session |
-| **Git Worktrees** | Isolated branches so 4 sessions built in parallel without conflicts |
-| **Nemp Memory** | Shared memory (`.nemp/memories.json`) read and written by every session |
-| **`nemp_memory.json`** | Human-readable cross-session architecture document |
-
-### Session Architecture
-
-Each session owned exactly one folder. No session touched another's code.
-
-```
-Session 0 (main branch)  →  shared/          Foundation: config, file I/O, validators
-Session 1 (session/cli)  →  cli/             Click CLI: vault, hypothesis, experiment, report
-Session 2 (session/vault)→  vault/           Obsidian scaffold, templates, JSON schemas
-Session 3 (session/engine)→ engine/          Hypothesis gen, experiment runner, winner logic
-Session 4 (session/reports)→reports/         Report compiler, Jinja2 formatter, exporter
-```
-
-Sessions ran in parallel git worktrees at:
-```
-C:\Users\User\sera-vault-os       ← master (Session 0)
-C:\Users\User\sera-session-1      ← session/cli
-C:\Users\User\sera-session-2      ← session/vault
-C:\Users\User\sera-session-3      ← session/engine
-C:\Users\User\sera-session-4      ← session/reports
-```
-
-All four session branches were merged into master during a single integration
-pass that fixed one cross-session bug (a subfolder naming mismatch between the
-CLI and the engine) and verified 79/79 tests + a full end-to-end smoke test.
+- **Full research lifecycle** — brief to report in one toolchain.
+- **Local-first & private** — every artifact is Markdown on your disk. No cloud, no lock-in.
+- **Obsidian-native** — vaults open directly in Obsidian with wiki-links between artifacts.
+- **Two interfaces** — a Click-based CLI and a Streamlit web UI that share the same vault.
+- **Per-client isolation** — each client gets an independent vault tree.
+- **Optional AI generation** — set `ANTHROPIC_API_KEY` for Claude-authored hypotheses and reports; graceful fallback without it.
+- **Tested** — an automated test suite covers the shared foundation, CLI, engine, and reports.
 
 ---
 
 ## Installation
 
-### Requirements
-- Python 3.10 or later
-- pip
-
-### Steps
+**Requirements:** Python 3.10+ and `pip`.
 
 ```bash
-# 1. Clone or navigate to the project
-cd C:\Users\User\sera-vault-os
+# Clone the repository
+git clone https://github.com/SukinShetty/sera.git
+cd sera
 
-# 2. (Optional but recommended) Create a virtual environment
+# (Recommended) create and activate a virtual environment
 python -m venv .venv
-.venv\Scripts\activate       # Windows
-# source .venv/bin/activate  # macOS / Linux
+# Windows
+.venv\Scripts\activate
+# macOS / Linux
+source .venv/bin/activate
 
-# 3. Install dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# 4. Verify the CLI works
+# Verify the CLI
 python -m cli.main --version
-# → sera, version 0.1.0
-
-# 5. (Optional) Enable AI-powered hypothesis and report generation
-# Set your Anthropic API key — SERA falls back to templated output without it.
-set ANTHROPIC_API_KEY=sk-ant-...    # Windows
-# export ANTHROPIC_API_KEY=sk-ant-... # macOS / Linux
 ```
 
-### Run Tests
+### Optional: AI-powered generation
+
+Hypothesis and report prose can be authored by Claude. This requires the `anthropic` package and an API key:
+
+```bash
+pip install anthropic
+
+# Windows (PowerShell)
+$env:ANTHROPIC_API_KEY = "sk-ant-..."
+# macOS / Linux
+export ANTHROPIC_API_KEY="sk-ant-..."
+```
+
+Without a key, SERA uses built-in templated generators — every command still produces complete output.
+
+### Run the tests
+
 ```bash
 python -m pytest tests/ -v
-# 83 passed
 ```
 
 ---
 
-## Streamlit Frontend (v0.2)
+## Quick Start
 
-SERA v0.2 ships a local web UI so you can manage research without the terminal.
-
-### Launch the Frontend
+A complete research cycle for a new client:
 
 ```bash
-streamlit run frontend/app.py
-```
-
-Opens at `http://localhost:8501` in your browser.
-
-### v0.2 Usage Flow
-
-The UI mirrors the CLI workflow across six tabs:
-
-| Tab | What you do |
-|-----|-------------|
-| **Brief** | Create a new research brief or view existing ones |
-| **Hypotheses** | Generate 3 hypotheses from a brief (AI or fallback) |
-| **Experiments** | Create an experiment from a hypothesis |
-| **Results** | Log measured values per condition (A, B, control, …) |
-| **Winner** | Select the winning condition with one click |
-| **Report** | Generate and preview the full Markdown report |
-
-Use the **sidebar** to create a new client vault or switch between existing clients.
-
-### CLI Still Works
-
-The v0.1 CLI is unchanged. All existing commands work exactly as before:
-
-```bash
+# 1. Create an isolated client vault
 python -m cli.main vault init --client acme-corp
+
+# 2. Write a brief (or create it in the Web UI)
+#    → vault/clients/acme-corp/briefs/brief-001.md
+
+# 3. Generate three hypotheses from the brief
 python -m cli.main hypothesis generate --client acme-corp --brief brief-001
+
+# 4. Create an experiment from a hypothesis
 python -m cli.main experiment create --client acme-corp --hypothesis hyp-001
+
+# 5. Log measured results (Python API or Web UI)
+python - <<'PY'
+from engine.results import log_result
+log_result("acme-corp", "exp-001", "A", "conversion_rate", 0.09, notes="Control")
+log_result("acme-corp", "exp-001", "B", "conversion_rate", 0.17, notes="Treatment")
+PY
+
+# 6. Select the winning condition (Python API or Web UI)
+python -c "from engine.winner import select_winner; print(select_winner('acme-corp','exp-001'))"
+
+# 7. Generate the client-ready report
 python -m cli.main report generate --client acme-corp --brief brief-001
+#    → reports/output/acme-corp/report-brief-001-001.md
 ```
 
-The CLI and the frontend share the same Obsidian vault — work done in one is immediately visible in the other.
-
----
-
-## CLI Reference
-
-All commands follow the pattern:
-```
-python -m cli.main <group> <command> [OPTIONS]
-```
-
-### `vault` — Manage client vaults
-
-| Command | Description |
-|---------|-------------|
-| `vault init --client <name>` | Create a new client vault with the standard folder structure |
-| `vault list` | List all existing client vaults with item counts |
-| `vault status --client <name>` | Show folder-by-folder status for a client |
-
-```bash
-python -m cli.main vault init --client acme-corp
-python -m cli.main vault list
-python -m cli.main vault status --client acme-corp
-```
-
-### `hypothesis` — Generate and list hypotheses
-
-| Command | Description |
-|---------|-------------|
-| `hypothesis generate --client <name> --brief <brief_id>` | Generate 3 hypotheses from a brief (uses Claude API or fallback) |
-| `hypothesis list --client <name>` | List all hypothesis files for a client |
-
-```bash
-python -m cli.main hypothesis generate --client acme-corp --brief brief-001
-python -m cli.main hypothesis list --client acme-corp
-```
-
-### `experiment` — Create and list experiments
-
-| Command | Description |
-|---------|-------------|
-| `experiment create --client <name> --hypothesis <hyp_id>` | Create an experiment from a hypothesis |
-| `experiment list --client <name>` | List all experiment files for a client |
-
-```bash
-python -m cli.main experiment create --client acme-corp --hypothesis hyp-001
-python -m cli.main experiment list --client acme-corp
-```
-
-### `report` — Generate and list reports
-
-| Command | Description |
-|---------|-------------|
-| `report generate --client <name> --brief <brief_id>` | Generate a full research report for a brief |
-| `report list --client <name>` | List all reports for a client |
-
-```bash
-python -m cli.main report generate --client acme-corp --brief brief-001
-python -m cli.main report list --client acme-corp
-```
-
----
-
-## End-to-End Workflow
-
-Here is a complete research cycle for a new client:
-
-### Step 1 — Create the client vault
-```bash
-python -m cli.main vault init --client acme-corp
-```
-Creates:
-```
-vault/clients/acme-corp/
-    _meta.md
-    briefs/
-    hypotheses/
-    experiments/
-    results/
-```
-
-### Step 2 — Write a research brief
-
-Create `vault/clients/acme-corp/briefs/brief-001.md`:
+A brief is the only file you write by hand. Everything downstream is generated. Example brief:
 
 ```markdown
 ---
@@ -256,158 +153,130 @@ created: 2026-05-12
 # Research Brief: Onboarding Conversion Study
 
 ## Objective
-
 Increase trial-to-paid conversion from 8% to 15% within 60 days.
 
 ## Research Questions
-
 1. What are the top three friction points in the onboarding flow?
 2. Which onboarding steps correlate most strongly with paid conversion?
 ```
 
-### Step 3 — Generate hypotheses
+---
+
+## Web UI (Streamlit)
+
+SERA ships a local web UI that mirrors the full CLI workflow:
+
 ```bash
-python -m cli.main hypothesis generate --client acme-corp --brief brief-001
-```
-Writes `hyp-001.md`, `hyp-002.md`, `hyp-003.md` to `vault/clients/acme-corp/hypotheses/`.
-
-### Step 4 — Create an experiment
-```bash
-python -m cli.main experiment create --client acme-corp --hypothesis hyp-001
-```
-Writes `exp-001.md` to `vault/clients/acme-corp/experiments/`.
-
-### Step 5 — Log results (via Python API)
-
-After running your actual experiment, log the measured outcomes:
-
-```python
-from engine.results import log_result
-
-log_result("acme-corp", "exp-001", "A", "conversion_rate", 0.09, notes="Control: existing flow")
-log_result("acme-corp", "exp-001", "B", "conversion_rate", 0.17, notes="Treatment: simplified onboarding")
+streamlit run frontend/app.py
 ```
 
-### Step 6 — Select the winner
-```python
-from engine.winner import select_winner
+Opens at `http://localhost:8501`. Use the sidebar to create or switch client vaults; each tab maps to one step of the workflow:
 
-summary = select_winner("acme-corp", "exp-001")
-print(summary)
-# {'winner_id': 'res-exp-001-b', 'winner_condition': 'B',
-#  'winner_metric': 'conversion_rate', 'winner_value': 0.17,
-#  'experiment_id': 'exp-001', 'total_results': 2}
-```
+| Tab | Purpose |
+|-----|---------|
+| **Brief** | Create or view research briefs |
+| **Hypotheses** | Generate three hypotheses from a brief |
+| **Experiments** | Create an experiment from a hypothesis |
+| **Results** | Log measured values per condition (A, B, control, …) |
+| **Winner** | Select the winning condition |
+| **Report** | Generate and preview the full Markdown report |
 
-### Step 7 — Generate the report
-```bash
-python -m cli.main report generate --client acme-corp --brief brief-001
-```
-Writes a complete Markdown report to `reports/output/acme-corp/report-brief-001-001.md`.
+The CLI and Web UI share the same vault — work done in one is immediately visible in the other.
+
+---
+
+## CLI Reference
+
+All commands follow `python -m cli.main <group> <command> [OPTIONS]`.
+
+### `vault` — manage client vaults
+
+| Command | Description |
+|---------|-------------|
+| `vault init --client <name>` | Create a client vault with the standard folder tree |
+| `vault list` | List all client vaults with item counts |
+| `vault status --client <name>` | Show folder-by-folder status for a client |
+
+### `hypothesis` — generate and list hypotheses
+
+| Command | Description |
+|---------|-------------|
+| `hypothesis generate --client <name> --brief <id>` | Generate three hypotheses from a brief |
+| `hypothesis list --client <name>` | List hypothesis files for a client |
+
+### `experiment` — create and list experiments
+
+| Command | Description |
+|---------|-------------|
+| `experiment create --client <name> --hypothesis <id>` | Scaffold an experiment from a hypothesis |
+| `experiment list --client <name>` | List experiment files for a client |
+
+### `report` — generate and list reports
+
+| Command | Description |
+|---------|-------------|
+| `report generate --client <name> --brief <id>` | Compile a full research report for a brief |
+| `report list --client <name>` | List reports for a client |
+
+> **Note:** Result logging and winner selection are currently exposed via the Web UI and the Python API (`engine.results.log_result`, `engine.winner.select_winner`); dedicated CLI commands are on the roadmap.
 
 ---
 
 ## Vault Structure
 
-Every client gets an isolated folder tree:
+Every client gets an isolated, Obsidian-compatible tree:
 
 ```
 vault/
   clients/
     {client_id}/
-      _meta.md             ← Obsidian entry point for this client
-      briefs/              ← Research briefs (you write these)
-        brief-001.md
-      hypotheses/          ← Generated by engine.hypothesis
-        hyp-001.md
-        hyp-002.md
-        hyp-003.md
-      experiments/         ← Created by engine.experiment
-        exp-001.md
-      results/             ← Logged by engine.results
-        res-exp-001-a.md
-        res-exp-001-b.md
+      _meta.md             # Obsidian entry point for this client
+      briefs/              # Research briefs (you write these)
+      hypotheses/          # Generated by engine.hypothesis
+      experiments/         # Created by engine.experiment
+      results/             # Logged by engine.results
 
 reports/
   output/
     {client_id}/
-      report-brief-001-001.md   ← Final client-ready report
+      report-brief-001-001.md   # Final client-ready report
 ```
 
-All files are standard Markdown with YAML frontmatter — open them directly in
-Obsidian or any Markdown editor.
+All files are standard Markdown with YAML frontmatter — open them in Obsidian or any editor.
 
 ---
 
-## Research-as-a-Service Use Cases
+## Use Cases
 
-### Conversion Rate Optimisation
-Run structured A/B tests on onboarding flows, pricing pages, or checkout steps.
-Log conversion rates per condition. Get a report showing which variant wins and
-by how much.
-
-### Product-Market Fit Research
-Test positioning hypotheses with early adopters. Log qualitative scores or NPS
-per segment. Select the segment with the strongest signal. Report the findings
-to stakeholders.
-
-### Consulting Engagements
-Create a separate vault per client. Each client's briefs, experiments, and
-reports are fully isolated. Generate a polished Markdown report at the end of
-each sprint. Export or print for delivery.
-
-### Startup Validation Sprints
-Run 5-10 experiments in a week across pricing, messaging, and audience targeting.
-Log results daily. SERA automatically tracks which hypotheses have been tested,
-which haven't, and what the next experiments should be.
-
-### Internal Strategy Research
-Use SERA internally to test product bets before committing engineering resources.
-Brief → hypothesis → experiment → winner is a forcing function for disciplined
-decision-making.
+- **Conversion rate optimisation** — structured A/B tests on onboarding, pricing, or checkout, with a report showing which variant wins and by how much.
+- **Product-market fit research** — test positioning hypotheses per segment, log scores, and report the strongest signal.
+- **Consulting engagements** — one isolated vault per client, with a polished report at the end of each sprint.
+- **Startup validation sprints** — run 5–10 experiments a week across pricing, messaging, and targeting; SERA tracks what's been tested and what's next.
+- **Internal strategy** — force disciplined decisions before committing engineering resources.
 
 ---
 
-## Current Limitations (v0.2.0)
+## Limitations
 
-| Area | Limitation |
-|------|-----------|
-| **Result logging** | No CLI command for `log_result` — use the Streamlit UI or Python API directly |
-| **Winner selection** | No CLI command for `select_winner` — use the Streamlit UI or Python API directly |
-| **Briefs** | No `brief create` CLI command — use the Streamlit UI or write the Markdown file manually |
-| **AI generation** | Requires `ANTHROPIC_API_KEY`; falls back to templated output without it |
-| **Report format** | Markdown only — no PDF or HTML export yet |
-| **Multi-user** | Local-only; no collaboration or cloud sync |
-| **Obsidian plugins** | Vault is Obsidian-compatible but no custom plugin or Dataview queries included |
-| **Metrics** | Numeric values only — no support for categorical or qualitative data |
+| Area | Current limitation (v0.2.0) |
+|------|------------------------------|
+| Result logging | No CLI command yet — use the Web UI or Python API |
+| Winner selection | No CLI command yet — use the Web UI or Python API |
+| Brief creation | No `brief create` CLI command — use the Web UI or write the Markdown manually |
+| AI generation | Requires the `anthropic` package and `ANTHROPIC_API_KEY`; falls back to templates otherwise |
+| Report format | Markdown only — no PDF or HTML export yet |
+| Collaboration | Local-only; no cloud sync or multi-user support |
+| Metrics | Numeric values only — no categorical or qualitative data |
 
 ---
 
 ## Roadmap
 
-### ✅ v0.2.0 — Streamlit frontend (shipped)
-- Local web UI at `http://localhost:8501`
-- Full workflow: brief → hypotheses → experiments → results → winner → report
-- CLI unchanged and fully compatible
-
-### v0.3.0 — Report formats
-- PDF export via `weasyprint` or `pandoc`
-- HTML export with embedded charts
-- Slack / email delivery hook
-
-### v0.4.0 — Obsidian integration
-- Custom Obsidian plugin for real-time vault browsing
-- Dataview query templates for experiment dashboards
-- Graph view link generation
-
-### v0.5.0 — Multi-client collaboration
-- Optional cloud sync (S3 / Dropbox)
-- Shared vaults with access control
-- Team annotations on results
-
-### v1.0.0 — Self-evolving layer
-- SERA reads its own past experiment results and proposes the next hypotheses
-  automatically, closing the research loop without human prompting
+- **v0.2.0 — Streamlit frontend** ✅ *(shipped)* — local web UI covering the full workflow; CLI unchanged.
+- **v0.3.0 — Report formats** — PDF/HTML export, Slack/email delivery hooks.
+- **v0.4.0 — Obsidian integration** — custom plugin, Dataview dashboards, graph-view links.
+- **v0.5.0 — Collaboration** — optional cloud sync, shared vaults with access control.
+- **v1.0.0 — Self-evolving layer** — SERA reads its own past results and proposes the next hypotheses automatically, closing the research loop.
 
 ---
 
@@ -415,20 +284,34 @@ decision-making.
 
 ```
 sera-vault-os/
-  shared/         Config, file I/O, validators  (Session 0)
-  cli/            Click CLI commands             (Session 1)
-  vault/          Obsidian scaffold + templates  (Session 2)
-  engine/         Hypothesis, experiment, winner (Session 3)
-  reports/        Compiler, formatter, exporter  (Session 4)
-  frontend/       Streamlit web UI               (Session 5 / v0.2)
-  tests/          83 automated tests
-  sera_config.json
-  nemp_memory.json
+  shared/         # Config, file I/O, validators
+  cli/            # Click CLI commands
+  vault/          # Obsidian scaffold + templates
+  engine/         # Hypothesis, experiment, results, winner
+  reports/        # Compiler, formatter, exporter
+  frontend/       # Streamlit web UI
+  tests/          # Automated test suite
   requirements.txt
+  sera_config.json
 ```
+
+---
+
+## Contributing
+
+Contributions are welcome. Please:
+
+1. Fork the repository and create a feature branch.
+2. Add or update tests for your change.
+3. Ensure `python -m pytest tests/ -v` passes.
+4. Open a pull request describing the change and its motivation.
 
 ---
 
 ## License
 
-MIT — use it, fork it, build on it.
+Released under the [MIT License](LICENSE).
+
+---
+
+<sub>SERA Vault OS was built with Claude Code using a parallel multi-agent workflow: independent sessions on isolated git worktrees each owned one module (`shared`, `cli`, `vault`, `engine`, `reports`, `frontend`), coordinated through shared memory and integrated in a single verified pass. See `DEMO.md` for a full walkthrough.</sub>
