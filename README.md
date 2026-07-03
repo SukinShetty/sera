@@ -52,7 +52,7 @@ SERA automates the scaffolding and report generation so you focus on the researc
 
 ## Features
 
-- **Full research lifecycle** — brief to report in one toolchain.
+- **Full research lifecycle** — brief to report in one toolchain, including real experiment execution: attach a Python script to an experiment, run it, and SERA logs the per-condition results and selects the winner automatically.
 - **Local-first & private** — every artifact is Markdown on your disk. No cloud, no lock-in.
 - **Obsidian-native** — vaults open directly in Obsidian with wiki-links between artifacts.
 - **Two interfaces** — a Click-based CLI and a Streamlit web UI that share the same vault.
@@ -138,6 +138,18 @@ python -c "from engine.winner import select_winner; print(select_winner('acme-co
 # 7. Generate the client-ready report
 python -m cli.main report generate --client acme-corp --brief brief-001
 #    → reports/output/acme-corp/report-brief-001-001.md
+```
+
+### Running an experiment
+
+Instead of logging results by hand (step 5 above), you can attach an executable Python script to an experiment and let SERA run it. The script prints a final `SERA_METRICS` JSON line; SERA logs one result per condition, picks the winner, and writes a run log. Try it with the bundled reference experiment (a deterministic chunking-strategy retrieval benchmark):
+
+```bash
+# Attach the reference experiment script
+python -m cli.main experiment attach acme-corp exp-001 engine/experiments/ref_chunking_retrieval.py
+
+# Execute it — results are logged and the winner is selected automatically
+python -m cli.main experiment run acme-corp exp-001
 ```
 
 A brief is the only file you write by hand. Everything downstream is generated. Example brief:

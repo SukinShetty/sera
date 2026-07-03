@@ -27,8 +27,8 @@
 
   "llm": {
     "_comment": "Language model settings for generating research questions, hypotheses, and reports.",
-    "provider":     "openai",
-    "model":        "gpt-4o",
+    "provider":     "anthropic",
+    "model":        "claude-sonnet-4-6",
     "temperature":  0.7,
     "max_tokens":   4096
   },

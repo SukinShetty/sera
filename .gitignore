@@ -13,7 +13,6 @@ env/
 # SERA runtime output (generated, not source-controlled)
 vault/clients/
 engine/logs/
-engine/experiments/
 reports/output/
 
 # OS / editor
