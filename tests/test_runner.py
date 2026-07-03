@@ -162,6 +162,26 @@ class TestReferenceExperimentContract:
         for condition, value in payload["conditions"].items():
             assert isinstance(value, (int, float)), f"{condition} value is not numeric: {value!r}"
 
+    def test_reference_experiment_is_not_saturated(self):
+        """The benchmark must differentiate conditions, not saturate at the top."""
+        proc = subprocess.run(
+            [sys.executable, str(REF_SCRIPT)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=120,
+        )
+        assert proc.returncode == 0, f"Script failed:\n{proc.stderr}"
+
+        final = [line.strip() for line in proc.stdout.splitlines() if line.strip()][-1]
+        payload = json.loads(final[len("SERA_METRICS"):].strip())
+        assert payload["metric"] == "answer_efficiency"
+
+        values = sorted(payload["conditions"].values())
+        best, worst = values[-1], values[0]
+        assert best < 0.9, f"Benchmark saturates: best condition scores {best}"
+        assert best - worst >= 0.05, f"Benchmark does not differentiate: spread {best - worst}"
+
 
 # ---------------------------------------------------------------------------
 # TEST 2 — Runner end-to-end

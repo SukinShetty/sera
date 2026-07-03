@@ -1,4 +1,30 @@
 {
+  "instinct-verify-claimed-files": {
+    "key": "instinct-verify-claimed-files",
+    "value": "Trigger: task premise says files/artifacts already exist ('pre-written', 'already in repo'). Action: verify exhaustively before acting (working tree, git history --all, branches/stashes, common user dirs); if absent and the contract is fully specified, author to spec and disclose the deviation prominently in the commit body and final report — never pretend the provided artifact was used. Evidence: 2026-07-03 runner integration — claimed runner.py + ref_chunking_retrieval.py existed nowhere; authored to spec, all 90 tests green, disclosed in 7c241b8. Confidence: 0.6 (pending, single occurrence).",
+    "created": "2026-07-03T00:00:00Z",
+    "updated": "2026-07-03T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["instinct", "pending", "workflow"],
+    "type": "hypothesis",
+    "confidence": { "score": 0.60, "source": "agent-inferred", "reason": "Single occurrence; pending until repeated" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.06 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": ["runner-integration-session-2026-07-03"] }
+  },
+  "runner-integration-session-2026-07-03": {
+    "key": "runner-integration-session-2026-07-03",
+    "value": "Commit 7c241b8: real experiment execution shipped. engine/runner.py: attach_script copies script into client experiments/ + records in frontmatter; run() executes via subprocess, writes engine/logs/<client>/run-<exp>-NNN.log, parses final SERA_METRICS JSON line {metric, conditions}, logs results, selects winner. engine/experiments/ref_chunking_retrieval.py = deterministic stdlib MRR benchmark (winner fixed_128_words@1.0). CLI: experiment attach/run (positional args, rich table). sera_config llm -> anthropic/claude-sonnet-4-6. tests/test_runner.py; suite 90 passed. WARNING: task claimed runner.py + ref script were pre-written in repo root but they existed nowhere (checked history, branches, Downloads) — authored from scratch to spec, disclosed in commit body. .gitignore no longer ignores engine/experiments/ (would have silently excluded source). Use py -3.14; PATH python = hermes venv without pytest.",
+    "created": "2026-07-03T00:00:00Z",
+    "updated": "2026-07-03T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["runner", "session", "complete"],
+    "type": "fact",
+    "confidence": { "score": 0.95, "source": "agent-verified", "reason": "All 90 tests green, CLI e2e verified on demo-ai-eng" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": ["sera-integration-complete", "sera-cli-contracts"] }
+  },
   "sera-project-definition": {
     "key": "sera-project-definition",
     "value": "SERA Vault OS = local-first Research-as-a-Service OS + Obsidian. Creates client vaults, generates hypotheses, runs experiments, logs results, selects winners, generates reports. Root: C:/Users/User/sera-vault-os",

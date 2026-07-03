@@ -7,3 +7,6 @@
 [2026-05-12T11:23:27Z] WRITE key=sera-worktrees agent=main chars=210
 [2026-05-12T11:23:27Z] WRITE key=sera-folder-ownership agent=main chars=198
 [2026-05-12T11:23:27Z] UPDATE key=sera-next-steps agent=main chars=155
+[] WRITE key=runner-integration-session-2026-07-03 agent=main chars=880
+[2026-07-03T07:22:08Z] WRITE key=runner-integration-session-2026-07-03 agent=main chars=880
+[2026-07-03T07:22:39Z] WRITE key=instinct-verify-claimed-files agent=main chars=620

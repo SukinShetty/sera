@@ -3,9 +3,14 @@ engine/experiments/ref_chunking_retrieval.py — SERA reference experiment.
 
 A real, fully deterministic retrieval experiment: it compares three document
 chunking strategies (small fixed-size windows, large fixed-size windows, and
-paragraph-based chunks) on the same corpus and query set, scoring each
-strategy by mean reciprocal rank (MRR) with length-normalized keyword
-retrieval.
+paragraph-based chunks) on the same corpus and query set.
+
+Primary metric: answer_efficiency — if the top-ranked chunk contains the
+query's gold answer span, score len(gold_span)/len(chunk), else 0; averaged
+over all queries. This rewards chunks that are both correct AND tight around
+the answer: hit-based metrics like recall or MRR saturate and reward large
+windows for surface area, not retrieval skill. MRR is still printed as a
+secondary diagnostic.
 
 Runs standalone with no dependencies beyond the standard library:
 
@@ -14,7 +19,7 @@ Runs standalone with no dependencies beyond the standard library:
 Output contract (consumed by engine.runner):
     - exits 0 on success
     - the FINAL stdout line is:
-        SERA_METRICS {"metric": "mrr", "conditions": {...}}
+        SERA_METRICS {"metric": "answer_efficiency", "conditions": {...}}
 """
 
 import json
@@ -75,25 +80,50 @@ CORPUS = {
     ),
 }
 
-# Each query names the document that actually answers it. Several queries
-# deliberately reuse vocabulary that appears in more than one document
-# (billing, email, minutes, projects, support, team) so ranking quality —
-# not mere keyword presence — separates the chunking strategies.
+# Each query is (query, relevant_doc, gold_span). The gold span is the exact
+# sentence in the corpus that answers the query — answer_efficiency measures
+# how tightly the top retrieved chunk wraps it. Half the queries are keyword
+# queries; the other half are PARAPHRASES with deliberately low lexical
+# overlap with the source text, so surface keyword matching alone cannot
+# saturate the benchmark.
 QUERIES = [
-    ("what counts as activation for a new user", "onboarding"),
-    ("where do users abandon workspace configuration", "onboarding"),
-    ("email signup form for new users", "onboarding"),
-    ("team retention after the first project", "onboarding"),
-    ("how much is the annual billing discount", "pricing"),
-    ("project cap on the free tier", "pricing"),
-    ("monthly billing per seat", "pricing"),
-    ("support included with the free plan", "pricing"),
-    ("how often is the index rebuilt in minutes", "search_infra"),
-    ("ranking penalty for long documents repeating keywords", "search_infra"),
-    ("cache expiry for query results", "search_infra"),
-    ("first response target in minutes for chat", "support"),
-    ("billing ticket escalation to finance", "support"),
-    ("email tickets triaged by the team", "support"),
+    # --- keyword queries ---
+    ("how much is the annual billing discount", "pricing",
+     "Annual billing carries a twenty percent discount over monthly billing."),
+    ("project cap on the free tier", "pricing",
+     "Starter is free forever with a cap of three projects and community support only."),
+    ("how often is the inverted index rebuilt", "search_infra",
+     "an inverted index that is rebuilt incrementally every five minutes"),
+    ("ranking penalty for long documents repeating keywords", "search_infra",
+     "Ranking combines term frequency with a length penalty so that very long "
+     "documents do not dominate the results purely by repeating keywords."),
+    ("first response target in minutes for chat", "support",
+     "Chat has the strictest target at fifteen minutes for first response."),
+    ("billing ticket escalation to finance", "support",
+     "Billing tickets are escalated directly to the finance rotation"),
+    ("where do users abandon workspace configuration", "onboarding",
+     "The biggest drop-off happens on the workspace configuration step, where "
+     "users must choose integrations before seeing any value."),
+    # --- paraphrase queries (low lexical overlap with the source) ---
+    ("when do we consider a user activated", "onboarding",
+     "Activation is defined as creating a first project and inviting at least "
+     "one teammate within seven days."),
+    ("what happens if someone skips the intake questionnaire", "onboarding",
+     "Users who skip the survey are routed to a generic template gallery "
+     "instead of a personalized workspace."),
+    ("which plan comes with a dedicated point of contact", "pricing",
+     "Scale is a custom contract with single sign-on, audit logs, and a "
+     "dedicated success manager."),
+    ("do big companies need paperwork before buying", "pricing",
+     "Enterprise procurement usually asks for a security questionnaire before "
+     "the contract is signed."),
+    ("what serves repeated identical searches quickly", "search_infra",
+     "Query latency is served from an in-memory cache with a five minute expiry."),
+    ("someone reported broken functionality, what happens next", "support",
+     "bug reports get a reproduction attempt before engineering handoff"),
+    ("what service goals does the support team measure", "support",
+     "The team tracks first response time and resolution time as its two "
+     "service level objectives."),
 ]
 
 STOPWORDS = {
@@ -146,42 +176,65 @@ def score(query_terms: set, chunk_tokens: list) -> float:
     return hits / len(chunk_tokens)
 
 
-def evaluate(chunker) -> float:
-    """Mean reciprocal rank of the first chunk from the relevant document."""
+def normalize(text: str) -> str:
+    """Lowercase and collapse whitespace, for span-containment checks."""
+    return " ".join(text.lower().split())
+
+
+def evaluate(chunker) -> tuple:
+    """
+    Return (answer_efficiency, mrr) for one chunking strategy.
+
+    answer_efficiency: if the TOP-ranked chunk contains the gold answer span,
+    score len(gold_span)/len(chunk) (normalized characters), else 0. Averaged
+    over queries. Big chunks that merely cover the answer earn little; chunks
+    that wrap it tightly earn the most.
+
+    mrr: reciprocal rank of the first chunk from the relevant document —
+    kept as a secondary diagnostic only.
+    """
     # Build the chunk index deterministically: corpus order, then chunk order.
     index = []
     for doc_id, text in CORPUS.items():
         for i, chunk in enumerate(chunker(text)):
-            index.append((doc_id, i, tokenize(chunk)))
+            index.append((doc_id, i, chunk, tokenize(chunk)))
 
+    efficiencies = []
     reciprocal_ranks = []
-    for query, relevant_doc in QUERIES:
+    for query, relevant_doc, gold_span in QUERIES:
         query_terms = set(tokenize(query))
         ranked = sorted(
             index,
-            key=lambda entry: (-score(query_terms, entry[2]), entry[0], entry[1]),
+            key=lambda entry: (-score(query_terms, entry[3]), entry[0], entry[1]),
         )
+
+        top_chunk = normalize(ranked[0][2])
+        gold = normalize(gold_span)
+        efficiencies.append(len(gold) / len(top_chunk) if gold in top_chunk else 0.0)
+
         rank = next(
-            (pos for pos, (doc_id, _, _) in enumerate(ranked, 1) if doc_id == relevant_doc),
+            (pos for pos, (doc_id, _, _, _) in enumerate(ranked, 1) if doc_id == relevant_doc),
             None,
         )
         reciprocal_ranks.append(1.0 / rank if rank else 0.0)
 
-    return round(sum(reciprocal_ranks) / len(reciprocal_ranks), 4)
+    answer_efficiency = round(sum(efficiencies) / len(efficiencies), 4)
+    mrr = round(sum(reciprocal_ranks) / len(reciprocal_ranks), 4)
+    return answer_efficiency, mrr
 
 
 def main() -> int:
-    print("Reference experiment: chunking strategy vs retrieval MRR")
-    print(f"Corpus: {len(CORPUS)} documents | Queries: {len(QUERIES)}")
+    print("Reference experiment: chunking strategy vs answer efficiency")
+    print(f"Corpus: {len(CORPUS)} documents | Queries: {len(QUERIES)} (half paraphrases)")
 
     results = {}
     for name, chunker in CONDITIONS.items():
-        mrr = evaluate(chunker)
-        results[name] = mrr
-        print(f"  condition={name:<16} mrr={mrr}")
+        answer_efficiency, mrr = evaluate(chunker)
+        results[name] = answer_efficiency
+        print(f"  condition={name:<16} answer_efficiency={answer_efficiency}  (diagnostic mrr={mrr})")
 
     print(METRICS_LINE_HELP)
-    print(f"SERA_METRICS {json.dumps({'metric': 'mrr', 'conditions': results})}")
+    print(f"SERA_METRICS {json.dumps({'metric': 'answer_efficiency', 'conditions': results})}")
     return 0
 
 

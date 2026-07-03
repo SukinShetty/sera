@@ -6,6 +6,7 @@ Commands:
     sera experiment list --client <name>
     sera experiment attach CLIENT EXP_ID SCRIPT_PATH
     sera experiment run CLIENT EXP_ID [--timeout 300]
+    sera experiment generate CLIENT EXP_ID [--and-run/--no-run]
 """
 
 import click
@@ -106,7 +107,39 @@ def experiment_run(client, exp_id, timeout):
 
     from engine.runner import run  # type: ignore[import]
     summary = run(client=client, experiment_id=exp_id, timeout=timeout)
+    _print_run_summary(client, exp_id, summary)
 
+
+@experiment.command("generate")
+@click.argument("client")
+@click.argument("exp_id")
+@click.option("--and-run/--no-run", "and_run", default=True, show_default=True,
+              help="Execute the generated script after validation, or stop after attaching it.")
+def experiment_generate(client, exp_id, and_run):
+    """Generate an experiment script with Claude, validate it, and run it."""
+    if not _engine_available():
+        console.print("[yellow]WARNING: Engine module not yet available (built in Session 3).[/yellow]")
+        console.print(f"   Would generate a script for experiment=[bold]{exp_id}[/bold], client=[bold]{client}[/bold]")
+        console.print("   Run Session 3 to enable this command.")
+        return
+
+    from engine.scriptgen import generate_script  # type: ignore[import]
+    summary = generate_script(client=client, experiment_id=exp_id, and_run=and_run)
+
+    if and_run:
+        _print_run_summary(client, exp_id, summary)
+    else:
+        console.print(f"[green]OK[/green] Generated and attached script for '[bold]{exp_id}[/bold]' (not run)")
+        console.print(f"  Script: {summary['script_path']}")
+        console.print(f"  Run it with: sera experiment run {client} {exp_id}")
+
+    console.print(f"  Claude attempts: {summary['attempts']}")
+    mode_style = "yellow" if summary["mode"] == "simulation" else "green"
+    console.print(f"  Mode: [{mode_style}]{summary['mode']}[/{mode_style}]")
+
+
+def _print_run_summary(client, exp_id, summary):
+    """Render the per-condition results table for a completed run."""
     winner_condition = summary["winner"]["winner_condition"]
 
     table = Table(title=f"Experiment Run: {exp_id} ({client})")

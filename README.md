@@ -152,6 +152,17 @@ python -m cli.main experiment attach acme-corp exp-001 engine/experiments/ref_ch
 python -m cli.main experiment run acme-corp exp-001
 ```
 
+#### Generated experiments
+
+With `ANTHROPIC_API_KEY` set, SERA can also *write* the experiment script for you: Claude reads the brief, hypothesis, and experiment design, generates a standalone Python script, and SERA statically validates it (stdlib-only import allowlist, no file/network/exec access, correct `SERA_METRICS` output contract) before attaching and running it. Validation or runtime failures are fed back to Claude for repair, up to two rounds.
+
+```bash
+python -m cli.main experiment generate acme-corp exp-001            # generate + run
+python -m cli.main experiment generate acme-corp exp-001 --no-run   # generate + attach only
+```
+
+**Honest limitation:** generated scripts are restricted to the Python standard library, so they usually cannot measure your real system — many are *simulations* of the hypothesized behavior. Scripts label themselves by printing `MODE: simulation` as their first output line, and the CLI surfaces this as `Mode: simulation` after the results table. Treat simulated results as a structured way to reason about a hypothesis, not as empirical evidence.
+
 A brief is the only file you write by hand. Everything downstream is generated. Example brief:
 
 ```markdown
