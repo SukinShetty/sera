@@ -11,6 +11,7 @@ from cli.commands.vault import vault
 from cli.commands.hypothesis import hypothesis
 from cli.commands.experiment import experiment
 from cli.commands.report import report
+from cli.commands.ask import ask
 
 
 @click.group()
@@ -27,6 +28,7 @@ sera.add_command(vault)
 sera.add_command(hypothesis)
 sera.add_command(experiment)
 sera.add_command(report)
+sera.add_command(ask)
 
 
 if __name__ == "__main__":

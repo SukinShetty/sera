@@ -110,7 +110,39 @@ python -m pytest tests/ -v
 
 ## Quick Start
 
-A complete research cycle for a new client:
+### Ask a question, get an evidenced answer
+
+The fastest way to use SERA is one command (requires `ANTHROPIC_API_KEY`). `sera ask` turns your question into a brief, generates testable hypotheses, has Claude write and execute a validated experiment script for each one, and answers with the best-performing condition — every artifact saved to the client vault as evidence.
+
+```bash
+python -m cli.main ask "Which caching strategy has the best hit rate?"
+```
+
+```
+OK Brief written: brief-001
+OK 3 hypotheses generated
+[1/3] Testing: Audience Alignment: ...
+    done winner=treatment (hit_rate=0.9)
+...
++---------------- ANSWER ----------------+
+| treatment performed best:              |
+| hit_rate = 0.9                         |
+|                                        |
+| Question: Which caching strategy ...   |
++----------------------------------------+
+        Evidence: 3/3 experiments succeeded
+| Hypothesis | Winner | Metric | Value | Mode | Attempts | Status |
+| ...        | ...    | ...    | ...   | ...  | ...      | ok     |
+Evidence:
+  Vault:    vault/clients/ask-caching-strategy-best-hit
+  Run logs: engine/logs/ask-caching-strategy-best-hit
+Note: results include simulated experiments -- they measure real algorithms on synthetic data.
+  Report: reports/output/.../report-brief-001-001.md
+```
+
+### Step-by-step workflow
+
+Prefer to drive each stage yourself? The same pipeline is available as individual commands — a complete research cycle for a new client:
 
 ```bash
 # 1. Create an isolated client vault

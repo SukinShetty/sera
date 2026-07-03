@@ -74,6 +74,7 @@ def generate_script(
     experiment_id: str,
     max_repair_attempts: int = 2,
     and_run: bool = True,
+    timeout: int = 300,
 ) -> dict:
     """
     Generate, validate, attach, and execute an experiment script via Claude.
@@ -83,6 +84,7 @@ def generate_script(
         experiment_id:       Experiment to generate for (e.g. "exp-001").
         max_repair_attempts: Repair rounds allowed after the initial attempt.
         and_run:             If False, stop after validate + attach (no run).
+        timeout:             Max seconds each script execution may take.
 
     Returns:
         engine.runner.run() summary dict plus {"attempts": n, "mode": ...}.
@@ -136,7 +138,7 @@ def generate_script(
                 }
 
             try:
-                summary = run(client, experiment_id)
+                summary = run(client, experiment_id, timeout=timeout)
                 _write_attempt_log(log_path, log_lines + ["-- run succeeded"])
                 summary["attempts"] = attempts
                 summary["mode"] = _detect_mode(summary["log_path"])
