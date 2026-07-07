@@ -15,6 +15,7 @@ vault/clients/
 vault/ledger.jsonl
 engine/logs/
 reports/output/
+experiments/ablation/runs/
 
 # OS / editor
 .DS_Store

@@ -1,0 +1,8 @@
+{"id": "ab-001", "question": "Which JSON parsing approach is fastest for small payloads: stdlib json, manual string slicing, or regex extraction?"}
+{"id": "ab-002", "question": "Which JSON parsing approach is most robust to malformed input: stdlib json with try/except, manual slicing, or regex extraction?"}
+{"id": "ab-003", "question": "Which near-duplicate detection strategy is most accurate on short text records: exact match, token-overlap Jaccard, or character trigram similarity?"}
+{"id": "ab-004", "question": "Which retry backoff strategy minimizes total wait time at equal success rate: fixed, linear, or exponential with jitter?"}
+{"id": "ab-005", "question": "Which cache eviction policy achieves the best hit rate on a skewed access pattern: LRU, LFU, or FIFO?"}
+{"id": "ab-006", "question": "Which substring search approach is fastest on medium-length text: str.find, precompiled regex, or a manual sliding-window scan?"}
+{"id": "ab-007", "question": "Which tokenization strategy gives the best keyword-search recall on noisy text: whitespace split, regex word tokens, or character trigrams?"}
+{"id": "ab-008", "question": "Which rate limiter enforces a target request rate most accurately under bursty traffic: token bucket, sliding window log, or fixed window counter?"}

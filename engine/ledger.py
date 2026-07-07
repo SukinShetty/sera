@@ -5,6 +5,9 @@ Every completed (or failed) generated experiment is recorded here so future
 hypothesis generation can calibrate on what actually happened.
 
 Storage: JSONL at vault/ledger.jsonl — one entry per line, append-only.
+The path can be overridden via the SERA_LEDGER_PATH environment variable;
+the ablation harness uses this to give each arm×repeat an isolated ledger
+so memory arms never contaminate each other.
 
 Public API:
     record(entry: dict) -> None
@@ -30,7 +33,9 @@ Entry schema:
 """
 
 import json
+import os
 import string
+from pathlib import Path
 
 from shared.config import CONFIG, PROJECT_ROOT
 from shared.file_io import ensure_dir
@@ -106,6 +111,9 @@ def compute_verdict(predicted_winner, actual_winner) -> str:
 # ---------------------------------------------------------------------------
 
 def _ledger_path():
+    override = os.environ.get("SERA_LEDGER_PATH")
+    if override:
+        return Path(override)
     return PROJECT_ROOT / CONFIG["paths"]["vault_root"] / "ledger.jsonl"
 
 

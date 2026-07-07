@@ -1,4 +1,30 @@
 {
+  "memory-sessions-p3-p4-2026-07-07": {
+    "key": "memory-sessions-p3-p4-2026-07-07",
+    "value": "P3 (ed267b7): sera ask = question->brief->hypotheses->generated experiments->ANSWER panel+table+report; tests mock scriptgen at module boundary. First live scriptgen run validated repair loop (truncation syntax error repaired). P4 (861a0b0): engine/ledger.py append-only vault/ledger.jsonl (gitignored) with record/query(token-overlap)/stats/compute_verdict(survived|killed|failed); hypothesis.generate(memory=True) injects PAST RESEARCH OUTCOMES block, audit-logged to engine/logs/<client>/hypgen-*.log; predicted_winner frontmatter required + scriptgen forces label verbatim into conditions; ANSWER = condition vote (raw winner_values are incommensurable across experiments — P3 flaw); validate_script rejects neg_* metric names; sera memory stats. Suite: 120 passed. PENDING: P4 live evidence blocked — API account out of credits; rerun commands are in docs/evidence/p4.md, then update that file and push.",
+    "created": "2026-07-07T00:00:00Z",
+    "updated": "2026-07-07T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["session", "memory", "ask", "pending"],
+    "type": "fact",
+    "confidence": { "score": 0.95, "source": "agent-verified", "reason": "120 tests green; live P3 run verified; P4 blocker reproduced" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": ["runner-integration-session-2026-07-03"] }
+  },
+  "instinct-preflight-external-deps": {
+    "key": "instinct-preflight-external-deps",
+    "value": "Trigger: a session's definition-of-done includes a LIVE external call (API run, deploy, paid service). Action: preflight the dependency FIRST and cheaply (key present? account usable? one tiny call) before hours of build work, and design the session order so tested-but-unproven work can still be committed with an honest 'evidence pending' note if the dependency fails; clean infrastructure-failure records out of data stores (they are not domain outcomes). Evidence: 2026-07-03 P3 gate failed on missing ANTHROPIC_API_KEY; 2026-07-07 P4 key existed but account had no credits — billing failures briefly polluted the outcome ledger and were removed. Confidence: 0.75 (two occurrences).",
+    "created": "2026-07-07T00:00:00Z",
+    "updated": "2026-07-07T00:00:00Z",
+    "agent_id": "main",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["instinct", "workflow"],
+    "type": "rule",
+    "confidence": { "score": 0.75, "source": "agent-inferred", "reason": "Two occurrences across P3 and P4 sessions" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": ["memory-sessions-p3-p4-2026-07-07"] }
+  },
   "instinct-verify-claimed-files": {
     "key": "instinct-verify-claimed-files",
     "value": "Trigger: task premise says files/artifacts already exist ('pre-written', 'already in repo'). Action: verify exhaustively before acting (working tree, git history --all, branches/stashes, common user dirs); if absent and the contract is fully specified, author to spec and disclose the deviation prominently in the commit body and final report — never pretend the provided artifact was used. Evidence: 2026-07-03 runner integration — claimed runner.py + ref_chunking_retrieval.py existed nowhere; authored to spec, all 90 tests green, disclosed in 7c241b8. Confidence: 0.6 (pending, single occurrence).",

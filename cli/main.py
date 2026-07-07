@@ -13,6 +13,7 @@ from cli.commands.experiment import experiment
 from cli.commands.report import report
 from cli.commands.ask import ask
 from cli.commands.memory import memory
+from cli.commands.ablate import ablate
 
 
 @click.group()
@@ -31,6 +32,7 @@ sera.add_command(experiment)
 sera.add_command(report)
 sera.add_command(ask)
 sera.add_command(memory)
+sera.add_command(ablate)
 
 
 if __name__ == "__main__":

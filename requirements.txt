@@ -13,7 +13,7 @@ rich>=13.0          # Pretty terminal output: tables, colors, progress bars
 python-frontmatter>=1.1   # Reads/writes Obsidian note metadata headers
 
 # --- Experiment Engine (Session 3) ---
-# No external dependencies planned yet
+matplotlib>=3.8     # Renders the memory-ablation HSR curve (sera ablate)
 
 # --- Report Generator (Session 4) ---
 jinja2>=3.1         # Template engine for generating research reports
