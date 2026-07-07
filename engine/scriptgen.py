@@ -61,7 +61,11 @@ SYSTEM_PROMPT = (
     "line print EXACTLY this contract (no colon after SERA_METRICS):\n"
     '   SERA_METRICS {"metric": "<metric_name>", "conditions": '
     '{"<condition_label>": <numeric_value>, ...}}\n'
-    "   The higher the value, the better the condition.\n"
+    "   The metric MUST be higher-is-better. Never negate a lower-is-better "
+    "metric to fake this (metric names starting with 'neg_' are rejected): "
+    "transform it into a genuinely higher-is-better quantity instead (e.g. "
+    "wait time -> rate = successes / total_wait_seconds) and name the "
+    "metric for what it now measures.\n"
     "7. Be honest about what you measure: if the script simulates behavior "
     "rather than measuring a real system, its FIRST output line must be "
     f"exactly '{SIMULATION_MARKER}'.\n\n"
@@ -195,6 +199,13 @@ def validate_script(code: str) -> list:
                 name = node.func.attr
             if name in FORBIDDEN_CALLS:
                 violations.append(f"forbidden call: {name}()")
+        elif isinstance(node, ast.Constant) and isinstance(node.value, str) \
+                and node.value.startswith("neg_"):
+            violations.append(
+                f"negated metric name '{node.value}': metrics must be genuinely "
+                "higher-is-better — transform lower-is-better quantities (e.g. "
+                "rate = successes / total_wait) instead of negating them"
+            )
 
     if "SERA_METRICS" not in code:
         violations.append(
@@ -248,10 +259,20 @@ def _build_user_prompt(context: dict) -> str:
     hyp_fm, hyp_body = context["hypothesis"]
     exp_fm, exp_body = context["experiment"]
 
+    predicted = hyp_fm.get("predicted_winner", "")
+    prediction_section = (
+        f"## Prediction contract\nThe hypothesis predicts the winning condition "
+        f"will be '{predicted}'. One of your condition labels MUST be exactly "
+        f"'{predicted}', verbatim, so the prediction can be scored against the "
+        "outcome. Name the competing conditions in the same style.\n\n"
+        if predicted else ""
+    )
+
     return (
         "Write the experiment script for this research context.\n\n"
         f"## Research brief: {brief_fm.get('title', '')}\n{brief_body}\n\n"
         f"## Hypothesis: {hyp_fm.get('title', '')}\n{hyp_body}\n\n"
+        f"{prediction_section}"
         f"## Experiment design: {exp_fm.get('title', '')}\n{exp_body}\n"
     )
 

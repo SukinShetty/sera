@@ -11,7 +11,7 @@ experiment per hypothesis → ANSWER panel + per-hypothesis results table
 """
 
 import re
-from datetime import date
+from datetime import date, datetime
 
 import click
 from rich.console import Console
@@ -39,7 +39,9 @@ def _engine_available() -> bool:
 @click.option("--max-hypotheses", default=3, show_default=True, help="Maximum hypotheses to test.")
 @click.option("--timeout", default=300, show_default=True, help="Max seconds per experiment script run.")
 @click.option("--no-report", is_flag=True, help="Skip compiling the final client report.")
-def ask(question, client, max_hypotheses, timeout, no_report):
+@click.option("--memory/--no-memory", "memory", default=True, show_default=True,
+              help="Condition hypothesis generation on past outcomes from the ledger.")
+def ask(question, client, max_hypotheses, timeout, no_report, memory):
     """Answer a research QUESTION with generated, executed experiments."""
     if not _engine_available():
         console.print("[yellow]WARNING: Engine module not yet available (built in Session 3).[/yellow]")
@@ -47,6 +49,7 @@ def ask(question, client, max_hypotheses, timeout, no_report):
         console.print("   Run Session 3 to enable this command.")
         return
 
+    from engine import ledger
     from engine.hypothesis import generate as generate_hypotheses
     from engine.experiment import create as create_experiment
     from engine.scriptgen import generate_script
@@ -67,15 +70,17 @@ def ask(question, client, max_hypotheses, timeout, no_report):
     console.print(f"[green]OK[/green] Brief written: {brief_id}")
 
     with console.status("Generating hypotheses..."):
-        hyp_ids = generate_hypotheses(client, brief_id)[:max_hypotheses]
-    console.print(f"[green]OK[/green] {len(hyp_ids)} hypotheses generated")
+        hyp_ids = generate_hypotheses(client, brief_id, memory=memory)[:max_hypotheses]
+    console.print(f"[green]OK[/green] {len(hyp_ids)} hypotheses generated (memory {'on' if memory else 'off'})")
 
     rows = []
     for i, hyp_id in enumerate(hyp_ids, 1):
         hyp_fm, _ = read_markdown(client_root / "hypotheses" / f"{hyp_id}.md")
         title = hyp_fm.get("title", hyp_id)
-        console.print(f"[{i}/{len(hyp_ids)}] Testing: [bold]{title}[/bold]")
+        predicted = hyp_fm.get("predicted_winner", "")
+        console.print(f"[{i}/{len(hyp_ids)}] Testing: [bold]{title}[/bold] (predicts: {predicted})")
 
+        summary = None
         try:
             exp_id = create_experiment(client, hyp_id)
             with console.status(f"[{i}/{len(hyp_ids)}] Claude is writing and running the experiment..."):
@@ -88,6 +93,8 @@ def ask(question, client, max_hypotheses, timeout, no_report):
         except Exception as exc:  # noqa: BLE001 — one failure must not sink the ask
             rows.append({"title": title, "summary": None, "status": "FAILED"})
             console.print(f"    [red]FAILED[/red] {escape(str(exc))}")
+
+        ledger.record(_ledger_entry(client, brief_id, question, hyp_id, title, predicted, summary))
 
     succeeded = [r for r in rows if r["status"] == "ok"]
     if not succeeded:
@@ -148,15 +155,66 @@ def _write_brief(client_root, client: str, question: str) -> str:
     return brief_id
 
 
+def _ledger_entry(client, brief_id, question, hyp_id, title, predicted, summary):
+    """Build one outcome-ledger entry for a completed or failed experiment."""
+    from engine import ledger
+
+    actual = summary["winner"]["winner_condition"] if summary else None
+    return {
+        "ts": datetime.now().isoformat(timespec="seconds"),
+        "client": client,
+        "brief_id": brief_id,
+        "question": question,
+        "hypothesis_id": hyp_id,
+        "hypothesis_title": title,
+        "predicted_winner": predicted,
+        "actual_winner": actual,
+        "verdict": ledger.compute_verdict(predicted, actual),
+        "metric": summary["metric"] if summary else None,
+        "winner_value": summary["winner"]["winner_value"] if summary else None,
+        "conditions": summary["conditions"] if summary else None,
+        "mode": summary["mode"] if summary else None,
+        "attempts": summary["attempts"] if summary else None,
+    }
+
+
+def _condition_vote(rows):
+    """
+    Vote across succeeded rows: the answer is the condition that won the
+    most experiments. Ties break by mean normalized margin — winner_value
+    minus runner-up, scaled by each experiment's value range — then by
+    label for determinism. Raw winner values are never compared across
+    experiments (their metrics have incommensurable scales).
+
+    Returns (display_label, wins, mean_margin).
+    """
+    votes = {}
+    for row in rows:
+        summary = row["summary"]
+        label = summary["winner"]["winner_condition"]
+        values = sorted((float(v) for v in summary["conditions"].values()), reverse=True)
+        top, low = values[0], values[-1]
+        runner_up = values[1] if len(values) > 1 else top
+        margin = (top - runner_up) / (top - low) if top > low else 0.0
+        votes.setdefault(label.strip().lower(), {"display": label, "margins": []})["margins"].append(margin)
+
+    def rank(item):
+        key, v = item
+        return (len(v["margins"]), sum(v["margins"]) / len(v["margins"]), key)
+
+    _, best = max(votes.items(), key=rank)
+    mean_margin = sum(best["margins"]) / len(best["margins"])
+    return best["display"], len(best["margins"]), round(mean_margin, 4)
+
+
 def _print_answer(question, rows, client_root, client):
     """Render the ANSWER panel, per-hypothesis table, and evidence paths."""
     succeeded = [r for r in rows if r["status"] == "ok"]
-    best = max(succeeded, key=lambda r: r["summary"]["winner"]["winner_value"])
-    winner = best["summary"]["winner"]
+    voted_label, wins, mean_margin = _condition_vote(succeeded)
 
     console.print(Panel(
-        f"[bold]{winner['winner_condition']}[/bold] performed best: "
-        f"{best['summary']['metric']} = {winner['winner_value']}\n\n"
+        f"[bold]{voted_label}[/bold] won {wins} of {len(succeeded)} experiments "
+        f"(condition vote; mean normalized margin {mean_margin})\n\n"
         f"[dim]Question: {escape(question)}[/dim]",
         title="ANSWER",
         border_style="green",
@@ -174,7 +232,8 @@ def _print_answer(question, rows, client_root, client):
     for row in rows:
         if row["status"] == "ok":
             summary = row["summary"]
-            style = "bold green" if row is best else None
+            won_vote = summary["winner"]["winner_condition"].strip().lower() == voted_label.strip().lower()
+            style = "bold green" if won_vote else None
             table.add_row(
                 row["title"],
                 summary["winner"]["winner_condition"],

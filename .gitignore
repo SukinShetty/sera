@@ -12,6 +12,7 @@ env/
 
 # SERA runtime output (generated, not source-controlled)
 vault/clients/
+vault/ledger.jsonl
 engine/logs/
 reports/output/
 

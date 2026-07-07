@@ -37,6 +37,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 _TEST_CONFIG = {
     "project": {"name": "SERA Vault OS"},
     "paths": {
+        "vault_root": "vault/",
         "clients_root": "vault/clients/",
         "templates_root": "vault/templates/",
         "experiments_root": "engine/experiments/",
@@ -85,6 +86,7 @@ def ask_env(tmp_path, monkeypatch):
     import engine.winner
     import engine.runner
     import engine.scriptgen
+    import engine.ledger
     import cli.commands.ask
 
     for mod in (
@@ -95,6 +97,7 @@ def ask_env(tmp_path, monkeypatch):
         engine.winner,
         engine.runner,
         engine.scriptgen,
+        engine.ledger,
         cli.commands.ask,
     ):
         monkeypatch.setattr(mod, "PROJECT_ROOT", tmp_path)

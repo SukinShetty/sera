@@ -12,6 +12,7 @@ from cli.commands.hypothesis import hypothesis
 from cli.commands.experiment import experiment
 from cli.commands.report import report
 from cli.commands.ask import ask
+from cli.commands.memory import memory
 
 
 @click.group()
@@ -29,6 +30,7 @@ sera.add_command(hypothesis)
 sera.add_command(experiment)
 sera.add_command(report)
 sera.add_command(ask)
+sera.add_command(memory)
 
 
 if __name__ == "__main__":
