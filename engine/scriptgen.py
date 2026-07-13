@@ -69,6 +69,8 @@ SYSTEM_PROMPT = (
     "7. Be honest about what you measure: if the script simulates behavior "
     "rather than measuring a real system, its FIRST output line must be "
     f"exactly '{SIMULATION_MARKER}'.\n\n"
+    "8. Keep the script compact — under 150 lines. Use only ASCII characters "
+    "in the source (no em-dashes or typographic quotes).\n\n"
     "Return ONLY the Python source code. No markdown fences, no commentary."
 )
 
@@ -192,13 +194,12 @@ def validate_script(code: str) -> list:
             if root not in ALLOWED_IMPORTS:
                 violations.append(f"forbidden import: from {node.module or '.'}")
         elif isinstance(node, ast.Call):
-            name = None
-            if isinstance(node.func, ast.Name):
-                name = node.func.id
-            elif isinstance(node.func, ast.Attribute):
-                name = node.func.attr
-            if name in FORBIDDEN_CALLS:
-                violations.append(f"forbidden call: {name}()")
+            # Only bare-name calls: the builtins open()/exec()/eval()/etc.
+            # Attribute calls like re.compile() are legitimate — the import
+            # allowlist already blocks modules that could smuggle file or
+            # process access (os, builtins, subprocess are not allowed).
+            if isinstance(node.func, ast.Name) and node.func.id in FORBIDDEN_CALLS:
+                violations.append(f"forbidden call: {node.func.id}()")
         elif isinstance(node, ast.Constant) and isinstance(node.value, str) \
                 and node.value.startswith("neg_"):
             violations.append(
@@ -227,7 +228,7 @@ def _call_claude(system: str, messages: list) -> str:
     ai = _anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
     msg = ai.messages.create(
         model=model,
-        max_tokens=4000,
+        max_tokens=8000,
         system=system,
         messages=messages,
     )
