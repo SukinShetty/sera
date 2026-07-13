@@ -1,0 +1,175 @@
+{
+  "arms": {
+    "on": {
+      "cycles": [
+        {
+          "cycle": 1,
+          "hsr_mean": 0.6041,
+          "hsr_std": 0.0208,
+          "survived": 29,
+          "killed": 19,
+          "failed": 0,
+          "per_repeat": [
+            {
+              "repeat": 1,
+              "hsr": 0.625,
+              "survived": 15,
+              "killed": 9,
+              "failed": 0
+            },
+            {
+              "repeat": 2,
+              "hsr": 0.5833,
+              "survived": 14,
+              "killed": 10,
+              "failed": 0
+            }
+          ]
+        },
+        {
+          "cycle": 2,
+          "hsr_mean": 0.6666,
+          "hsr_std": 0.0417,
+          "survived": 32,
+          "killed": 16,
+          "failed": 0,
+          "per_repeat": [
+            {
+              "repeat": 1,
+              "hsr": 0.7083,
+              "survived": 17,
+              "killed": 7,
+              "failed": 0
+            },
+            {
+              "repeat": 2,
+              "hsr": 0.625,
+              "survived": 15,
+              "killed": 9,
+              "failed": 0
+            }
+          ]
+        },
+        {
+          "cycle": 3,
+          "hsr_mean": 0.625,
+          "hsr_std": 0.1667,
+          "survived": 30,
+          "killed": 18,
+          "failed": 0,
+          "per_repeat": [
+            {
+              "repeat": 1,
+              "hsr": 0.4583,
+              "survived": 11,
+              "killed": 13,
+              "failed": 0
+            },
+            {
+              "repeat": 2,
+              "hsr": 0.7917,
+              "survived": 19,
+              "killed": 5,
+              "failed": 0
+            }
+          ]
+        }
+      ],
+      "overall_hsr": 0.6319,
+      "survived": 91,
+      "killed": 53,
+      "failed": 0
+    },
+    "off": {
+      "cycles": [
+        {
+          "cycle": 1,
+          "hsr_mean": 0.3542,
+          "hsr_std": 0.3542,
+          "survived": 17,
+          "killed": 7,
+          "failed": 24,
+          "per_repeat": [
+            {
+              "repeat": 1,
+              "hsr": 0.7083,
+              "survived": 17,
+              "killed": 7,
+              "failed": 0
+            },
+            {
+              "repeat": 2,
+              "hsr": 0.0,
+              "survived": 0,
+              "killed": 0,
+              "failed": 24
+            }
+          ]
+        },
+        {
+          "cycle": 2,
+          "hsr_mean": 0.3333,
+          "hsr_std": 0.3333,
+          "survived": 12,
+          "killed": 6,
+          "failed": 30,
+          "per_repeat": [
+            {
+              "repeat": 1,
+              "hsr": 0.6667,
+              "survived": 12,
+              "killed": 6,
+              "failed": 6
+            },
+            {
+              "repeat": 2,
+              "hsr": 0.0,
+              "survived": 0,
+              "killed": 0,
+              "failed": 24
+            }
+          ]
+        },
+        {
+          "cycle": 3,
+          "hsr_mean": 0.0,
+          "hsr_std": 0.0,
+          "survived": 0,
+          "killed": 0,
+          "failed": 48,
+          "per_repeat": [
+            {
+              "repeat": 1,
+              "hsr": 0.0,
+              "survived": 0,
+              "killed": 0,
+              "failed": 24
+            },
+            {
+              "repeat": 2,
+              "hsr": 0.0,
+              "survived": 0,
+              "killed": 0,
+              "failed": 24
+            }
+          ]
+        }
+      ],
+      "overall_hsr": 0.6905,
+      "survived": 29,
+      "killed": 13,
+      "failed": 102
+    }
+  },
+  "params": {
+    "briefs": 8,
+    "cycles": 3,
+    "repeats": 2,
+    "arms": [
+      "on",
+      "off"
+    ],
+    "dry_run": false,
+    "started_utc": "20260713T115643Z"
+  }
+}
