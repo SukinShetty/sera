@@ -1,0 +1,6 @@
+{"arm": "on", "repeat": 1, "cycle": 1, "brief_id": "ab-001", "hypothesis_id": "hyp-001", "predicted_winner": "stdlib_json", "actual_winner": "manual_slicing", "verdict": "killed"}
+{"arm": "on", "repeat": 1, "cycle": 1, "brief_id": "ab-001", "hypothesis_id": "hyp-002", "predicted_winner": "manual_string_slicing", "actual_winner": "manual_string_slicing", "verdict": "survived"}
+{"arm": "on", "repeat": 1, "cycle": 1, "brief_id": "ab-001", "hypothesis_id": "hyp-003", "predicted_winner": "stdlib_json", "actual_winner": null, "verdict": "failed"}
+{"arm": "on", "repeat": 1, "cycle": 1, "brief_id": "ab-002", "hypothesis_id": "hyp-004", "predicted_winner": "stdlib_json_try_except", "actual_winner": "stdlib_json_try_except", "verdict": "survived"}
+{"arm": "on", "repeat": 1, "cycle": 1, "brief_id": "ab-002", "hypothesis_id": "hyp-005", "predicted_winner": "regex_extraction", "actual_winner": "regex_extraction", "verdict": "survived"}
+{"arm": "on", "repeat": 1, "cycle": 1, "brief_id": "ab-002", "hypothesis_id": "hyp-006", "predicted_winner": "stdlib_json_try_except", "actual_winner": "manual_slicing", "verdict": "killed"}
