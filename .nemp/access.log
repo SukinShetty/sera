@@ -13,3 +13,5 @@
 [2026-07-07T06:21:29Z] WRITE key=memory-sessions-p3-p4-2026-07-07 agent=main chars=1030
 [2026-07-07T06:21:29Z] WRITE key=instinct-preflight-external-deps agent=main chars=760
 [2026-07-13T00:00:00Z] WRITE key=memory-sessions-p3-p4-2026-07-07 agent=main chars=1400
+[2026-07-13T14:41:36Z] SESSION_UPDATE agent=main keys=memory-sessions-p3-p4-2026-07-07,instinct-preflight-external-deps note=ablation-run1-forensics
+[2026-07-14T07:11:56Z] MEMORY_WRITE agent=main key=instinct-structural-failure-forensics op=create
