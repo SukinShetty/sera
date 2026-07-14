@@ -56,13 +56,24 @@ def ablate(briefs_path, cycles, repeats, dry_run, yes):
         if not yes:
             click.confirm("Proceed with the real run?", abort=True)
 
-    summary = run_ablation(
-        briefs_path,
-        cycles=cycles,
-        repeats=repeats,
-        dry_run=dry_run,
-        progress=lambda message: console.print(f"[dim]{message}[/dim]"),
-    )
+    from engine.api import BillingError
+
+    try:
+        summary = run_ablation(
+            briefs_path,
+            cycles=cycles,
+            repeats=repeats,
+            dry_run=dry_run,
+            progress=lambda message: console.print(f"[dim]{message}[/dim]"),
+        )
+    except BillingError as exc:
+        console.print(
+            "\n[bold red]ABORTED: Anthropic credit balance exhausted.[/bold red]\n"
+            f"[red]{exc}[/red]\n"
+            "The run halted immediately. Partial results.jsonl and per-arm "
+            "ledgers on disk are valid (append-only). Top up credits and "
+            "restart the run.")
+        raise SystemExit(1)
 
     table = Table(title="Hypothesis Survival Rate (memory ablation)")
     table.add_column("Arm", style="cyan", no_wrap=True)

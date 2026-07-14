@@ -221,17 +221,25 @@ def validate_script(code: str) -> list:
 # ---------------------------------------------------------------------------
 
 def _call_claude(system: str, messages: list) -> str:
-    """One Claude call. Kept small so tests can mock the Anthropic client."""
+    """
+    One Claude call. Kept small so tests can mock the Anthropic client.
+
+    Runs under engine.api.call_with_backoff: 429s are retried with backoff,
+    and a credit-exhaustion error is raised as BillingError so it aborts the
+    whole run rather than being logged as a repairable script failure.
+    """
     import anthropic as _anthropic  # optional import — not in requirements.txt
+
+    from engine.api import call_with_backoff
 
     model = CONFIG.get("llm", {}).get("model", DEFAULT_MODEL)
     ai = _anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-    msg = ai.messages.create(
+    msg = call_with_backoff(lambda: ai.messages.create(
         model=model,
         max_tokens=8000,
         system=system,
         messages=messages,
-    )
+    ))
     return msg.content[0].text
 
 

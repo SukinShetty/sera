@@ -65,29 +65,42 @@ def run_ablation(
     ensure_dir(out)
     say = progress or (lambda message: None)
 
+    # INTERLEAVED arm ordering (run-2 fix, docs/evidence/p6.md): within every
+    # cycle+brief, run all arm×repeat combinations back-to-back so any
+    # wall-clock event (billing, throttling, outage) hits every arm
+    # symmetrically instead of landing entirely on whichever arm ran last.
+    # Cycle stays the OUTERMOST loop, so an arm's full cycle N completes
+    # before its cycle N+1 begins — required for memory-conditioning validity.
+    arm_repeats = [(arm, repeat)
+                   for repeat in range(1, repeats + 1)
+                   for arm in memory_arms]
+
     results = []
-    for arm in memory_arms:
-        for repeat in range(1, repeats + 1):
-            ledger_path = out / f"ledger-{arm}-r{repeat}.jsonl"
-            # client is derived from out_dir (unique per run), so every run
-            # gets fresh vaults and hypothesis numbering starts at hyp-001
-            client = f"ablation-{out.name.lower()}-{arm}-r{repeat}"
-            previous = os.environ.get("SERA_LEDGER_PATH")
-            os.environ["SERA_LEDGER_PATH"] = str(ledger_path)
-            try:
-                for cycle in range(1, cycles + 1):
-                    for brief in briefs:
-                        say(f"arm={arm} repeat={repeat} cycle={cycle}/{cycles} brief={brief['id']}")
-                        for row in _run_brief(client, brief, arm == "on", dry_run, timeout, repeat):
-                            row = {"arm": arm, "repeat": repeat, "cycle": cycle,
-                                   "brief_id": brief["id"], **row}
-                            results.append(row)
-                            _append_jsonl(out / "results.jsonl", row)
-            finally:
-                if previous is None:
-                    os.environ.pop("SERA_LEDGER_PATH", None)
-                else:
-                    os.environ["SERA_LEDGER_PATH"] = previous
+    previous_ledger = os.environ.get("SERA_LEDGER_PATH")
+    try:
+        for cycle in range(1, cycles + 1):
+            for brief in briefs:
+                for arm, repeat in arm_repeats:
+                    ledger_path = out / f"ledger-{arm}-r{repeat}.jsonl"
+                    # client is derived from out_dir (unique per run), so every
+                    # run gets fresh vaults and hypothesis numbering starts at
+                    # hyp-001 and continues per (arm, repeat) across cycles.
+                    client = f"ablation-{out.name.lower()}-{arm}-r{repeat}"
+                    # switch the isolated ledger PER ASK so interleaved arms
+                    # never read or write each other's memory.
+                    os.environ["SERA_LEDGER_PATH"] = str(ledger_path)
+                    say(f"cycle={cycle}/{cycles} brief={brief['id']} "
+                        f"-> arm={arm} r{repeat} [interleaved]")
+                    for row in _run_brief(client, brief, arm == "on", dry_run, timeout, repeat):
+                        row = {"arm": arm, "repeat": repeat, "cycle": cycle,
+                               "brief_id": brief["id"], **row}
+                        results.append(row)
+                        _append_jsonl(out / "results.jsonl", row)
+    finally:
+        if previous_ledger is None:
+            os.environ.pop("SERA_LEDGER_PATH", None)
+        else:
+            os.environ["SERA_LEDGER_PATH"] = previous_ledger
 
     summary = summarize(results, cycles, repeats, memory_arms)
     summary["params"] = {
@@ -199,6 +212,7 @@ def _run_brief(client: str, brief: dict, memory: bool, dry_run: bool, timeout: i
     query + audit log, ledger record); dry-run only swaps the Claude steps.
     """
     from engine import ledger
+    from engine.api import BillingError
     from engine.experiment import create as create_experiment
     from engine.hypothesis import generate as generate_hypotheses
     from engine.scriptgen import generate_script
@@ -213,7 +227,8 @@ def _run_brief(client: str, brief: dict, memory: bool, dry_run: bool, timeout: i
     if dry_run:
         # No Claude: force the offline fallback generator, but keep the
         # memory flag live so ledger.query + the hypgen audit log run
-        # exactly as they would in a real arm.
+        # exactly as they would in a real arm. (strict is irrelevant offline —
+        # the fallback IS the intended path here.)
         key = os.environ.pop("ANTHROPIC_API_KEY", None)
         try:
             hyp_ids = generate_hypotheses(client, vault_brief_id, memory=memory)
@@ -221,7 +236,16 @@ def _run_brief(client: str, brief: dict, memory: bool, dry_run: bool, timeout: i
             if key is not None:
                 os.environ["ANTHROPIC_API_KEY"] = key
     else:
-        hyp_ids = generate_hypotheses(client, vault_brief_id, memory=memory)
+        # strict=True: a memory-off ask must never be silently backfilled by
+        # the offline template generator (that confounded run 1). A billing
+        # error aborts the whole run; any other hypgen failure fails only
+        # this brief's asks and lets the run continue.
+        try:
+            hyp_ids = generate_hypotheses(client, vault_brief_id, memory=memory, strict=True)
+        except BillingError:
+            raise
+        except Exception:  # noqa: BLE001 — hypgen failed for this brief
+            return [_failed_row() for _ in range(HYPOTHESES_PER_BRIEF)]
 
     rows = []
     for hyp_id in hyp_ids[:HYPOTHESES_PER_BRIEF]:
@@ -236,6 +260,10 @@ def _run_brief(client: str, brief: dict, memory: bool, dry_run: bool, timeout: i
             try:
                 exp_id = create_experiment(client, hyp_id)
                 summary = generate_script(client, exp_id, timeout=timeout)
+            except BillingError:
+                # unrecoverable credit exhaustion — abort the ENTIRE run
+                # rather than record a bogus "failed" verdict.
+                raise
             except Exception:  # noqa: BLE001 — a failed experiment is a "failed" verdict
                 summary = None
 
@@ -264,6 +292,12 @@ def _run_brief(client: str, brief: dict, memory: bool, dry_run: bool, timeout: i
             "verdict": verdict,
         })
     return rows
+
+
+def _failed_row() -> dict:
+    """A result row for an ask whose hypotheses could not be generated."""
+    return {"hypothesis_id": "", "predicted_winner": "",
+            "actual_winner": None, "verdict": "failed"}
 
 
 def _mock_run(arm: str, repeat: int, brief_id: str, hyp_id: str, predicted: str):

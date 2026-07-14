@@ -31,7 +31,7 @@ from shared.config import CONFIG, PROJECT_ROOT
 from shared.file_io import ensure_dir, read_markdown, write_markdown
 
 
-def generate(client: str, brief_id: str, memory: bool = True) -> list[str]:
+def generate(client: str, brief_id: str, memory: bool = True, strict: bool = False) -> list[str]:
     """
     Generate 3 research hypotheses from an existing brief.
 
@@ -40,12 +40,21 @@ def generate(client: str, brief_id: str, memory: bool = True) -> list[str]:
         brief_id: ID of the brief file (e.g. "brief-001"), without .md extension.
         memory:   Inject relevant past outcomes from the ledger into the
                   generation prompt (the ablation lever — see module docstring).
+        strict:   If True, any API failure RAISES instead of falling back to
+                  the offline template generator. The ablation harness uses
+                  strict=True so a memory-off hypothesis is never silently
+                  replaced by a canned template (which confounded run 1 —
+                  see docs/evidence/p6.md). Normal `sera ask` leaves this
+                  False and keeps the always-works fallback.
 
     Returns:
         List of hypothesis IDs created (e.g. ["hyp-001", "hyp-002", "hyp-003"]).
 
     Raises:
         FileNotFoundError: If the brief file does not exist.
+        engine.api.BillingError: On credit exhaustion (propagates in strict
+                  mode to halt the run).
+        Exception: Any other API failure, when strict=True.
     """
     clients_root = PROJECT_ROOT / CONFIG["paths"]["clients_root"]
     brief_path = clients_root / client / "briefs" / f"{brief_id}.md"
@@ -60,7 +69,7 @@ def generate(client: str, brief_id: str, memory: bool = True) -> list[str]:
     memory_block = _build_memory_block(fm, body) if memory else None
     _log_memory_block(client, brief_id, memory_block)
 
-    hypotheses = _generate_hypotheses(client, brief_id, fm, body, memory_block)
+    hypotheses = _generate_hypotheses(client, brief_id, fm, body, memory_block, strict)
 
     created_ids = []
     for i, hyp_data in enumerate(hypotheses, start=start_n):
@@ -83,12 +92,20 @@ def generate(client: str, brief_id: str, memory: bool = True) -> list[str]:
 # ---------------------------------------------------------------------------
 
 def _generate_hypotheses(
-    client: str, brief_id: str, brief_fm: dict, brief_body: str, memory_block: str = None
+    client: str, brief_id: str, brief_fm: dict, brief_body: str,
+    memory_block: str = None, strict: bool = False,
 ) -> list[dict]:
-    """Try Anthropic API first; fall back to templated generation."""
+    """
+    Try Anthropic API first; fall back to templated generation.
+
+    With strict=True the fallback is disabled: any API failure (including
+    engine.api.BillingError) propagates so the caller can fail loudly.
+    """
     try:
         return _generate_via_anthropic(client, brief_id, brief_fm, brief_body, memory_block)
     except Exception:
+        if strict:
+            raise
         return _generate_fallback(brief_fm, brief_body)
 
 
@@ -121,12 +138,14 @@ def _generate_via_anthropic(
         "No markdown fences, no explanation — raw JSON only."
     )
 
+    from engine.api import call_with_backoff
+
     ai = _anthropic.Anthropic(api_key=api_key)
-    msg = ai.messages.create(
+    msg = call_with_backoff(lambda: ai.messages.create(
         model="claude-sonnet-4-6",
         max_tokens=1200,
         messages=[{"role": "user", "content": prompt}],
-    )
+    ))
 
     raw = msg.content[0].text.strip()
     # Strip accidental markdown code fences
