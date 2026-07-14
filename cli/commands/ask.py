@@ -207,15 +207,122 @@ def _condition_vote(rows):
     return best["display"], len(best["margins"]), round(mean_margin, 4)
 
 
+def _guard_same_metric(label, succeeded):
+    """
+    Degenerate-winner guard. A condition may never be crowned while a
+    condition sharing its metric scored strictly higher. For every
+    experiment `label` won, compare its winning value against every
+    same-metric peer value across all experiments; if any peer is strictly
+    higher, prefer that peer instead. Same metric name = commensurable
+    scale, so the comparison is valid.
+
+    Returns the label to crown (possibly unchanged).
+    """
+    lab = label.strip().lower()
+    chosen_label, chosen_val = label, None
+    for row in succeeded:
+        summary = row["summary"]
+        if summary["winner"]["winner_condition"].strip().lower() != lab:
+            continue
+        metric = summary["metric"]
+        own_value = float(summary["winner"]["winner_value"])
+        for other in succeeded:
+            other_summary = other["summary"]
+            if other_summary["metric"] != metric:
+                continue
+            for peer_label, peer_value in other_summary["conditions"].items():
+                if peer_label.strip().lower() == lab:
+                    continue
+                peer_value = float(peer_value)
+                if peer_value > own_value and (chosen_val is None or peer_value > chosen_val):
+                    chosen_label, chosen_val = peer_label, peer_value
+    return chosen_label
+
+
+def _synthesize_answer(succeeded):
+    """
+    Metric-aware winner synthesis across succeeded experiments.
+
+    Experiments sharing a metric NAME are on a commensurable scale, so
+    their values may be compared directly; values from DIFFERENT metric
+    names must never be compared by raw value (that would reintroduce the
+    inverse of the bug this fixes).
+
+    - If one metric name dominates — the unique most-common metric, shared
+      by at least 2 experiments — the answer is the condition with the
+      highest actual value on that shared metric ("shared-metric" path).
+      Each experiment's winner is that experiment's max on the metric, so
+      the top winner value is the true maximum across all conditions.
+    - Otherwise the metrics are incommensurable: fall back to counting
+      experiment wins ("different-metric" path), guarded so a condition is
+      never crowned while a same-metric peer scored strictly higher.
+
+    Returns a dict:
+        {condition, path, metric, value, shared_count, wins, total, mean_margin}
+    where path is "shared-metric" or "different-metric" and the fields not
+    relevant to that path are None.
+    """
+    total = len(succeeded)
+    groups = {}
+    for row in succeeded:
+        groups.setdefault(row["summary"]["metric"], []).append(row)
+
+    counts = {metric: len(group) for metric, group in groups.items()}
+    max_count = max(counts.values())
+    top_metrics = [metric for metric, count in counts.items() if count == max_count]
+
+    if max_count >= 2 and len(top_metrics) == 1:
+        metric = top_metrics[0]
+        peers = groups[metric]
+        best = max(peers, key=lambda r: float(r["summary"]["winner"]["winner_value"]))
+        return {
+            "condition": best["summary"]["winner"]["winner_condition"],
+            "path": "shared-metric",
+            "metric": metric,
+            "value": best["summary"]["winner"]["winner_value"],
+            "shared_count": len(peers),
+            "wins": None,
+            "total": total,
+            "mean_margin": None,
+        }
+
+    voted_label, _, mean_margin = _condition_vote(succeeded)
+    label = _guard_same_metric(voted_label, succeeded)
+    wins = sum(1 for r in succeeded
+               if r["summary"]["winner"]["winner_condition"].strip().lower() == label.strip().lower())
+    return {
+        "condition": label,
+        "path": "different-metric",
+        "metric": None,
+        "value": None,
+        "shared_count": None,
+        "wins": wins,
+        "total": total,
+        "mean_margin": mean_margin,
+    }
+
+
 def _print_answer(question, rows, client_root, client):
     """Render the ANSWER panel, per-hypothesis table, and evidence paths."""
     succeeded = [r for r in rows if r["status"] == "ok"]
-    voted_label, wins, mean_margin = _condition_vote(succeeded)
+    answer = _synthesize_answer(succeeded)
+    answer_label = answer["condition"]
+
+    if answer["path"] == "shared-metric":
+        headline = (
+            f"[bold]{answer_label}[/bold] — best {answer['metric']} at "
+            f"{answer['value']} (compared across {answer['shared_count']} "
+            "experiments sharing this metric)"
+        )
+    else:
+        headline = (
+            "Experiments used different metrics; no single comparable winner. "
+            f"By experiment wins: [bold]{answer_label}[/bold] won "
+            f"{answer['wins']} of {answer['total']}."
+        )
 
     console.print(Panel(
-        f"[bold]{voted_label}[/bold] won {wins} of {len(succeeded)} experiments "
-        f"(condition vote; mean normalized margin {mean_margin})\n\n"
-        f"[dim]Question: {escape(question)}[/dim]",
+        f"{headline}\n\n[dim]Question: {escape(question)}[/dim]",
         title="ANSWER",
         border_style="green",
     ))
@@ -232,8 +339,8 @@ def _print_answer(question, rows, client_root, client):
     for row in rows:
         if row["status"] == "ok":
             summary = row["summary"]
-            won_vote = summary["winner"]["winner_condition"].strip().lower() == voted_label.strip().lower()
-            style = "bold green" if won_vote else None
+            is_answer = summary["winner"]["winner_condition"].strip().lower() == answer_label.strip().lower()
+            style = "bold green" if is_answer else None
             table.add_row(
                 row["title"],
                 summary["winner"]["winner_condition"],
