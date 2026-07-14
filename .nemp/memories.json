@@ -280,5 +280,18 @@
     "confidence": { "score": 0.90, "source": "user-confirmed", "reason": "Manually saved by user" },
     "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
     "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": [] }
+  },
+  "stack": {
+    "key": "stack",
+    "value": "Python 3.14 (use `py -3.14`). CLI: Click + Rich. Frontend: Streamlit (frontend/app.py). LLM: Anthropic Claude (claude-sonnet-4-6) via optional `anthropic` SDK. Charts: matplotlib. Reports: Jinja2. Vault metadata: python-frontmatter. Tests: pytest + pytest-cov. Local-first: no DB/ORM — append-only JSONL ledger (vault/ledger.jsonl) + Obsidian markdown vault. Deps: pip / requirements.txt (no lockfile).",
+    "created": "2026-07-14T14:55:16Z",
+    "updated": "2026-07-14T14:55:16Z",
+    "agent_id": "nemp-init",
+    "projectPath": "C:/Users/User/sera-vault-os",
+    "tags": ["auto-detected", "stack"],
+    "type": "fact",
+    "confidence": { "score": 0.90, "source": "agent-verified", "reason": "Detected from requirements.txt + sera_config.json + frontend/" },
+    "vitality": { "score": 50, "trend": "stable", "state": "active", "reads": 0, "last_read": null, "reads_7d": 0, "reads_30d": 0, "foresight_loads": 0, "foresight_skips": 0, "agent_references": 0, "update_count": 0, "correction_events": 0, "decay_rate": 0.01 },
+    "links": { "goals": [], "conflicts": [], "supersedes": null, "superseded_by": null, "causal": ["sera-project-definition", "sera-shared-api"] }
   }
 }
